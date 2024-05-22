@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://bno8ovsebpdpj"]
+
+[ext_resource type="Script" path="res://Scripts/midi_options.gd" id="1_q467k"]
+
+[node name="MidiOptions" type="Node2D"]
+script = ExtResource("1_q467k")
+
+[node name="MidiIn" type="MidiIn" parent="."]
+
+[node name="MidiOut" type="MidiOut" parent="."]
+
+[node name="HBoxContainerWidgets" type="HBoxContainer" parent="."]
+offset_right = 1152.0
+offset_bottom = 40.0
+
+[node name="ButtonRefresh" type="Button" parent="HBoxContainerWidgets"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="TextSelectMidiIn" type="Label" parent="HBoxContainerWidgets"]
+layout_mode = 2
+text = "MIDI Input"
+
+[node name="SelectMidiIn" type="OptionButton" parent="HBoxContainerWidgets"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+allow_reselect = true
+
+[node name="TextSelectMidiOut" type="Label" parent="HBoxContainerWidgets"]
+layout_mode = 2
+text = "MIDI Output"
+
+[node name="SelectMidiOut" type="OptionButton" parent="HBoxContainerWidgets"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+allow_reselect = true
+
+[node name="Button" type="Button" parent="HBoxContainerWidgets"]
+layout_mode = 2
+text = "Send some notes"
+
+[connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="refresh"]
+[connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="_on_button_refresh_pressed"]
+[connection signal="item_selected" from="HBoxContainerWidgets/SelectMidiIn" to="." method="on_select_midi_in"]
+[connection signal="item_selected" from="HBoxContainerWidgets/SelectMidiOut" to="." method="on_select_midi_out"]
+[connection signal="pressed" from="HBoxContainerWidgets/Button" to="." method="_on_button_pressed"]

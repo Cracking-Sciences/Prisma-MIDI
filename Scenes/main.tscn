@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgkq5ujk7us2b"]
+
+[ext_resource type="PackedScene" uid="uid://bno8ovsebpdpj" path="res://Scenes/midi_options.tscn" id="1_x8nld"]
+[ext_resource type="PackedScene" uid="uid://vjed1pel4ili" path="res://Scenes/piano.tscn" id="2_i5ykp"]
+
+[node name="Main" type="Node2D"]
+
+[node name="MidiOptions" parent="." instance=ExtResource("1_x8nld")]
+
+[node name="Piano" parent="." instance=ExtResource("2_i5ykp")]
+position = Vector2(-3, 388)
