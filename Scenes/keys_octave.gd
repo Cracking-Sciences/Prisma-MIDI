@@ -4,7 +4,7 @@ var keys: Array = []
 var height = 300.0
 var width = 400.0
 var white_gap_ratio = 0.1 			# leave some gap between keys
-var black_height_ratio = 0.7 		# compare to single white key
+var black_height_ratio = 0.70 		# compare to single white key
 var black_width_ratio = 0.65 		# compare to single white key
 
 const key_scence= preload("res://Scenes/key.tscn")
@@ -45,10 +45,10 @@ func resize():
 		var color_rect = keys[i]
 		if i in [1, 3, 6, 8, 10]:
 			color_rect.size = Vector2(black_width, black_height)
-			color_rect.position = Vector2(i * twelve_equal, 0)
+			color_rect.position = Vector2((i+0.5) * twelve_equal - black_width / 2, 0)
 			color_rect.move_to_front()
 
 		else:
 			color_rect.size = Vector2(white_width - white_gap, white_height)
-			color_rect.position = Vector2(white_count * white_width + white_gap / 2, 0)
+			color_rect.position = Vector2(white_count * white_width, 0)
 			white_count += 1

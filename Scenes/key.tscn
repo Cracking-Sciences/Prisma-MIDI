@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwoowy0xxkfwl"]
+[gd_scene load_steps=2 format=3 uid="uid://b0o57oxm5mtqs"]
 
-[ext_resource type="Script" path="res://Scripts/key.gd" id="1_fjtn1"]
+[ext_resource type="Script" path="res://Scenes/key.gd" id="1_fjtn1"]
 
 [node name="Key" type="ColorRect"]
 anchors_preset = -1

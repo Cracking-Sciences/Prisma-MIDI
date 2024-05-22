@@ -67,8 +67,8 @@ func send_midi_message(data: Array, target: MidiOut = null):
 
 # demo
 func _on_button_pressed():
-	send_midi_message([Utils.ProgramChange,5], midi_out)
-	send_midi_message([Utils.ControlChange,7,100], midi_out)
+	# send_midi_message([Utils.ProgramChange,5], midi_out)
+	# send_midi_message([Utils.ControlChange,7,100], midi_out)
 	var note = randi_range(20,80)
 	send_midi_message([Utils.NoteOn, note, 90], midi_out)
 	await Utils.sleep(0.5)

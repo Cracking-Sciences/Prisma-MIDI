@@ -1,0 +1,93 @@
+[gd_scene load_steps=3 format=3 uid="uid://vjed1pel4ili"]
+
+[ext_resource type="Script" path="res://Scenes/piano_roll.gd" id="1_7ujpr"]
+[ext_resource type="Script" path="res://Scenes/piano.gd" id="1_jqdrl"]
+
+[node name="PianoRoll" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7ujpr")
+
+[node name="PianoRollContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="FallingNotes" type="Control" parent="PianoRollContainer"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+
+[node name="Piano" type="Control" parent="PianoRollContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("1_jqdrl")
+
+[node name="HBoxContainerWidgets" type="HBoxContainer" parent="PianoRollContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "Height"
+
+[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.01
+max_value = 0.4
+step = 0.01
+value = 0.1
+
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "Octaves"
+
+[node name="HSliderOctaves" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 11.0
+value = 7.0
+
+[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "BlackWidth"
+
+[node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.4
+max_value = 0.9
+step = 0.05
+value = 0.65
+
+[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "BlackHeight
+"
+
+[node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderHeight" to="." method="change_piano_height"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderOctaves" to="." method="change_piano_octaves"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackWidth" to="." method="change_piano_black_width"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight" to="." method="change_piano_black_height"]

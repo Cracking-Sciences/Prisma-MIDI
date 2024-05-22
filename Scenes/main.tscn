@@ -1,11 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgkq5ujk7us2b"]
+[gd_scene load_steps=4 format=3 uid="uid://dgkq5ujk7us2b"]
 
+[ext_resource type="Script" path="res://Scenes/main.gd" id="1_jqver"]
 [ext_resource type="PackedScene" uid="uid://bno8ovsebpdpj" path="res://Scenes/midi_options.tscn" id="1_x8nld"]
-[ext_resource type="PackedScene" uid="uid://vjed1pel4ili" path="res://Scenes/piano.tscn" id="2_i5ykp"]
+[ext_resource type="PackedScene" uid="uid://vjed1pel4ili" path="res://Scenes/piano_roll.tscn" id="2_i5ykp"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jqver")
+
+[node name="PianoRoll" parent="." instance=ExtResource("2_i5ykp")]
+layout_mode = 1
 
 [node name="MidiOptions" parent="." instance=ExtResource("1_x8nld")]
-
-[node name="Piano" parent="." instance=ExtResource("2_i5ykp")]
-position = Vector2(-3, 388)
