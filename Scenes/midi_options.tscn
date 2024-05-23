@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bno8ovsebpdpj"]
+[gd_scene load_steps=3 format=3 uid="uid://bno8ovsebpdpj"]
 
 [ext_resource type="Script" path="res://Scenes/midi_options.gd" id="1_q467k"]
+[ext_resource type="Script" path="res://Scenes/CheckBoxTemplate.gd" id="2_423k2"]
 
 [node name="MidiOptions" type="Node2D"]
 script = ExtResource("1_q467k")
@@ -9,39 +10,99 @@ script = ExtResource("1_q467k")
 
 [node name="MidiIn" type="MidiIn" parent="."]
 
-[node name="HBoxContainerWidgets" type="HBoxContainer" parent="."]
-offset_right = 1152.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ButtonRefresh" type="Button" parent="HBoxContainerWidgets"]
+[node name="HBoxContainerDevice" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-text = "Refresh"
 
-[node name="TextSelectMidiIn" type="Label" parent="HBoxContainerWidgets"]
+[node name="ButtonRefresh" type="Button" parent="VBoxContainer/HBoxContainerDevice"]
+layout_mode = 2
+text = "Refresh Devices"
+
+[node name="TextSelectMidiIn" type="Label" parent="VBoxContainer/HBoxContainerDevice"]
 layout_mode = 2
 text = "MIDI Input"
 
-[node name="SelectMidiIn" type="OptionButton" parent="HBoxContainerWidgets"]
+[node name="SelectMidiIn" type="OptionButton" parent="VBoxContainer/HBoxContainerDevice"]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 allow_reselect = true
 
-[node name="TextSelectMidiOut" type="Label" parent="HBoxContainerWidgets"]
+[node name="TextSelectMidiOut" type="Label" parent="VBoxContainer/HBoxContainerDevice"]
 layout_mode = 2
 text = "MIDI Output"
 
-[node name="SelectMidiOut" type="OptionButton" parent="HBoxContainerWidgets"]
+[node name="SelectMidiOut" type="OptionButton" parent="VBoxContainer/HBoxContainerDevice"]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 allow_reselect = true
 
-[node name="Button" type="Button" parent="HBoxContainerWidgets"]
+[node name="ButtonSendSomeNotes" type="Button" parent="VBoxContainer/HBoxContainerDevice"]
 layout_mode = 2
 text = "Send some notes"
 
+[node name="HBoxContainerScore" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonOpenScore" type="Button" parent="VBoxContainer/HBoxContainerScore"]
+layout_mode = 2
+text = "Load MIDI File"
+
+[node name="TextFileName" type="Label" parent="VBoxContainer/HBoxContainerScore"]
+layout_mode = 2
+text = "[Invalid] (drag file here)"
+
+[node name="ButtonSelectTracks" type="Button" parent="VBoxContainer/HBoxContainerScore"]
+layout_mode = 2
+text = "Select Tracks ↓"
+
+[node name="PopupMenuSelectTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks"]
+size = Vector2i(60, 240)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer"]
+layout_mode = 2
+
+[node name="CheckBoxTemplate" type="CheckBox" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+script = ExtResource("2_423k2")
+
+[node name="ButtonGenerateMap" type="Button" parent="VBoxContainer/HBoxContainerScore"]
+layout_mode = 2
+text = "Generate Map"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Load MIDI File"
+initial_position = 2
+size = Vector2i(500, 500)
+ok_button_text = "Open"
+mode_overrides_title = false
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.mid")
+show_hidden_files = true
+
 [connection signal="midi_message" from="MidiIn" to="." method="on_midi_message"]
-[connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="refresh"]
-[connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="_on_button_refresh_pressed"]
-[connection signal="item_selected" from="HBoxContainerWidgets/SelectMidiIn" to="." method="on_select_midi_in"]
-[connection signal="item_selected" from="HBoxContainerWidgets/SelectMidiOut" to="." method="on_select_midi_out"]
-[connection signal="pressed" from="HBoxContainerWidgets/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonRefresh" to="." method="refresh"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonRefresh" to="." method="_on_button_refresh_pressed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiIn" to="." method="on_select_midi_in"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="_on_select_midi_out_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="on_select_midi_out"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="on_send_some_notes"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonOpenScore" to="." method="on_open_file_dialog"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonSelectTracks" to="." method="on_button_select_tracks_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="on_file_dialog_selected"]

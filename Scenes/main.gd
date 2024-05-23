@@ -21,7 +21,7 @@ func _notification(what):
 		var piano_roll = $PianoRoll
 		piano_roll.custom_minimum_size = get_viewport_rect().size
 
-func on_midi_in_message(deltatime, message):
+func on_midi_in_message(_deltatime, message):
 	if len(message) != 3:
 		return
 	var is_on

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://vjed1pel4ili"]
+[gd_scene load_steps=4 format=3 uid="uid://vjed1pel4ili"]
 
 [ext_resource type="Script" path="res://Scenes/piano_roll.gd" id="1_7ujpr"]
 [ext_resource type="Script" path="res://Scenes/piano.gd" id="1_jqdrl"]
+[ext_resource type="Script" path="res://Scenes/note.gd" id="2_2kehm"]
 
 [node name="PianoRoll" type="Control"]
 layout_mode = 3
@@ -21,9 +22,22 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
-[node name="FallingNotes" type="Control" parent="PianoRollContainer"]
-custom_minimum_size = Vector2(0, 400)
+[node name="FallingNotes" type="HBoxContainer" parent="PianoRollContainer"]
 layout_mode = 2
+
+[node name="NoteArea" type="Control" parent="PianoRollContainer/FallingNotes"]
+layout_mode = 2
+
+[node name="note" type="Panel" parent="PianoRollContainer/FallingNotes/NoteArea"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 167.0
+script = ExtResource("2_2kehm")
+
+[node name="VSlider" type="VSlider" parent="PianoRollContainer/FallingNotes"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+step = 0.1
 
 [node name="Piano" type="Control" parent="PianoRollContainer"]
 custom_minimum_size = Vector2(0, 200)

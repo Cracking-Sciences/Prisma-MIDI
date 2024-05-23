@@ -40,7 +40,7 @@ func set_octaves():
 func resize_keys():
 	if keys_octaves.size() == 0:
 		return
-	var octave_width = size.x / num_octaves
+	var octave_width = (size.x - Utils.vertical_progression_slider_width)/ num_octaves
 	var octave_height = size.y
 	for i in range(num_octaves):
 		keys_octaves[i].height = octave_height

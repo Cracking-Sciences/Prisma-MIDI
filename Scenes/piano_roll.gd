@@ -2,6 +2,10 @@ extends Control
 
 @onready
 var piano_roll_container = $PianoRollContainer
+@onready
+var falling_notes = $PianoRollContainer/FallingNotes
+@onready
+var note_area = $PianoRollContainer/FallingNotes/NoteArea
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,23 +21,28 @@ func _notification(what):
 func set_all():
 	piano_roll_container.custom_minimum_size = get_viewport_rect().size
 	var height_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderHeight
+	height_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_piano_height(height_slider.value)
 	var octaves_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderOctaves
+	octaves_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_piano_octaves(octaves_slider.value)
 	var black_width_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderBlackWidth
+	black_width_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_piano_black_width(black_width_slider.value)
 	var black_height_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight
+	black_height_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_piano_black_height(black_height_slider.value)
 
+	note_area.custom_minimum_size.x = get_viewport_rect().size.x - Utils.vertical_progression_slider_width
+	falling_notes.get_node("VSlider").custom_minimum_size.x = Utils.vertical_progression_slider_width
 
 func change_piano_height(ratio):
 	var height = get_viewport_rect().size.y * ratio
 	var piano = $PianoRollContainer/Piano
-	var falling_notes = $PianoRollContainer/FallingNotes
 	var widgets = $PianoRollContainer/HBoxContainerWidgets
 	piano.custom_minimum_size.y = height
 	falling_notes.custom_minimum_size.y = get_viewport_rect().size.y * \
-		(1 - ratio) - widgets.size.y
+		(1 - ratio) - widgets.size.y - 60
 
 func change_piano_octaves(num):
 	var piano = piano_roll_container.get_node("Piano")
