@@ -3,24 +3,24 @@ extends Control
 
 @export var num_octaves: int = 8
 var keys_octaves: Array
-const keys_octave = preload("res://Scenes/keys_octave.tscn")
+var note_to_key: Dictionary
+
+
 var black_width_ratio = 0.65
 var black_height_ratio = 0.70
 
+const keys_octave = preload("res://Scenes/keys_octave.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_octaves()
 	resize_keys()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
 func set_octaves():
 	for child in keys_octaves:
 		remove_child(child)
 	keys_octaves.clear()
+	note_to_key.clear()
 	var middle = int(num_octaves / 2)
 	for i in range(num_octaves):
 		var new_octave = keys_octave.instantiate()
@@ -30,7 +30,11 @@ func set_octaves():
 		for key in new_octave.keys:
 			key.piano = self
 			change_mouse_pressed.connect(key._on_change_mouse_pressed)
-			key.note = clamp((i - middle) * 12 + j + 60, 0, 127)
+			var temp_note = (i - middle) * 12 + j + 60
+			key.note = clamp(temp_note, 0, 127)
+			if temp_note == key.note:
+				# unclamped
+				note_to_key[temp_note] = key
 			j = j + 1
 
 func resize_keys():
@@ -68,3 +72,9 @@ func _gui_input(input_event):
 		set_mouse_pressed(false)
 	if input_event is InputEventMouseButton and input_event.pressed:
 		set_mouse_pressed(true)
+
+func get_key(note) -> Key:
+	# return the key or null
+	if note in note_to_key:
+		return note_to_key[note]
+	return null

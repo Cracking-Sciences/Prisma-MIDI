@@ -3,9 +3,6 @@
 [ext_resource type="Script" path="res://Scenes/key.gd" id="1_fjtn1"]
 
 [node name="Key" type="ColorRect"]
-anchors_preset = -1
-anchor_right = 0.031
-anchor_bottom = 0.124
 offset_right = 4.288
 offset_bottom = 58.648
 mouse_default_cursor_shape = 2

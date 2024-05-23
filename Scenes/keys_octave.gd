@@ -3,7 +3,7 @@ extends Control
 var keys: Array = []
 var height = 300.0
 var width = 400.0
-var white_gap_ratio = 0.1 			# leave some gap between keys
+var white_gap_ratio = 0.15 			# leave some gap between keys
 var black_height_ratio = 0.70 		# compare to single white key
 var black_width_ratio = 0.65 		# compare to single white key
 
@@ -24,12 +24,6 @@ func _ready():
 		add_child(new_key)
 		keys.append(new_key)
 	resize()
-
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 
 func resize():

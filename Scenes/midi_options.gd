@@ -7,11 +7,17 @@ var selected_midi_out_name = ""
 var selected_midi_in_name = ""
 var time = 0.0
 var message_out: PackedByteArray
+var message_in: PackedByteArray
 
 @onready
 var midi_out = $MidiOut
 @onready
 var midi_in = $MidiIn
+@onready
+var select_midi_out = $HBoxContainerWidgets/SelectMidiOut
+@onready
+var select_midi_in = $HBoxContainerWidgets/SelectMidiIn
+
 
 func _ready():
 	refresh()
@@ -23,38 +29,44 @@ func _process(delta):
 func refresh():
 # button refresh
 # midi out
-	var select_midi_out = $HBoxContainerWidgets/SelectMidiOut
 	select_midi_out.clear()
 	select_midi_out.text = "Select MIDI Output"
 	var num_ports = MidiOut.get_port_count()
+	var have_selected = false
 	for i in range(num_ports):
 		var port_name = MidiOut.get_port_name(i)
 		select_midi_out.add_item(port_name)
 		if port_name == selected_midi_out_name:
 			select_midi_out.selected = i
-
+			have_selected = true
+	if not have_selected and num_ports > 0:
+		select_midi_out.selected = 0
+		on_select_midi_out(0)
 # midi in
-	var select_midi_in = $HBoxContainerWidgets/SelectMidiIn
 	select_midi_in.clear()
 	select_midi_in.text = "Select MIDI Input"
 	num_ports = MidiIn.get_port_count()
+	have_selected = false
 	for i in range(num_ports):
 		var port_name = MidiIn.get_port_name(i)
 		select_midi_in.add_item(port_name)
 		if port_name == selected_midi_in_name:
 			select_midi_in.selected = i
+			have_selected = true
+	if not have_selected and num_ports > 0:
+		select_midi_in.selected = 0
+		on_select_midi_in(0)
 
 func on_select_midi_out(index):
-	var select_midi_out = $HBoxContainerWidgets/SelectMidiOut
 	selected_midi_out_name = select_midi_out.get_item_text(index)
 	midi_out.close_port()
 	midi_out.open_port(index)
 
 func on_select_midi_in(index):
-	var select_midi_in = $HBoxContainerWidgets/SelectMidiIn
 	selected_midi_in_name = select_midi_in.get_item_text(index)
 	midi_in.close_port()
 	midi_in.open_port(index)
+	midi_in.ignore_types(false, false, false)
 
 func send_midi_message(data: Array, target: MidiOut = null):
 	if target == null:
@@ -74,4 +86,13 @@ func _on_button_pressed():
 	await Utils.sleep(0.5)
 	send_midi_message([Utils.NoteOff, note, 40], midi_out)
 
+func _on_midi_message(deltatime, message):
+	print(deltatime)
+	print(message)
 
+signal midi_in_message(event: InputEventMIDI)
+
+# func _unhandled_input(event: InputEvent):
+# 	if event is InputEventMIDI:
+# 		if event.controller_number == select_midi_in.selected:
+# 			midi_in_message.emit(event)

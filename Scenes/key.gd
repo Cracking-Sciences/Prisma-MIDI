@@ -4,34 +4,38 @@ extends ColorRect
 @export var note = 60 # midi note code
 @export var start_color = color
 @export var piano: Piano = null
-@export var active_color = Color.ORANGE
+@export var active_color = Color.ORANGE # default active color
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
 var is_activate = false
 
 func mouse_activate():
-	is_activate = true
-	color = active_color
-	if piano != null:
-		var velocity = clamp(int(get_local_mouse_position().y * 128 / size.y), 1, 126)
-		piano.note_on_off.emit(true, note, velocity)
-	# print(note)
+	var velocity = clamp(int(get_local_mouse_position().y * 140 / size.y), 1, 126)
+	activate(velocity)
 
 func mouse_deactivate():
+	deactivate(100)
+
+
+func activate(velocity, new_color = null):
+	is_activate = true
+	if new_color == null:
+		new_color = active_color
+	color = (new_color * velocity + start_color * (128 - velocity)) / 128
+	if piano != null:
+		piano.note_on_off.emit(true, note, velocity)
+
+func deactivate(velocity):
 	if is_activate:
 		is_activate = false
 		color = start_color
 		if piano != null:
-			piano.note_on_off.emit(false, note, 100)
+			piano.note_on_off.emit(false, note, velocity)
+
 
 # slide:
 func _on_mouse_entered():

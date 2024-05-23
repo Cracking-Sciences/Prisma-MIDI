@@ -8,10 +8,6 @@ func _ready():
 	# piano_roll_container.set_anchors_preset(Control.LayoutPreset.PRESET_FULL_RECT)
 	set_all()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		if piano_roll_container == null:
@@ -28,7 +24,6 @@ func set_all():
 	change_piano_black_width(black_width_slider.value)
 	var black_height_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight
 	change_piano_black_height(black_height_slider.value)
-
 
 
 func change_piano_height(ratio):
