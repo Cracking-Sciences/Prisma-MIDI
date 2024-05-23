@@ -8,7 +8,7 @@ var piano = $PianoRoll/PianoRollContainer/Piano
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	piano.note_on_off.connect(self.note_on_off)
-	midi_options.midi_in_message.connect(self.handle_midi_in_message)
+	midi_options.get_midi_in_message.connect(self.on_midi_in_message)
 
 func note_on_off(is_on, note, velocity):
 	if is_on:
@@ -21,22 +21,24 @@ func _notification(what):
 		var piano_roll = $PianoRoll
 		piano_roll.custom_minimum_size = get_viewport_rect().size
 
-func handle_midi_in_message(event: InputEventMIDI):
+func on_midi_in_message(deltatime, message):
+	if len(message) != 3:
+		return
 	var is_on
-	match event.message:
-		MIDI_MESSAGE_NOTE_ON:
+	match message[0]:
+		Utils.NoteOn:
 			is_on = true
-		MIDI_MESSAGE_NOTE_OFF:
+		Utils.NoteOff:
 			is_on = false
 		_:
 			return
-	var key = piano.get_key(event.pitch)
+	var key = piano.get_key(message[1])
 	if key == null:
 		# trigger without the key
-		note_on_off(is_on, event.pitch, event.velocity)
+		note_on_off(is_on, message[1], message[2])
 	else:
 		# trigger from the key
 		if is_on:
-			key.activate(event.velocity)
+			key.activate(message[2])
 		else:
-			key.deactivate(event.velocity)
+			key.deactivate(message[2])

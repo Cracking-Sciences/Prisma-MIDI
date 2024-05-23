@@ -39,7 +39,7 @@ allow_reselect = true
 layout_mode = 2
 text = "Send some notes"
 
-[connection signal="midi_message" from="MidiIn" to="." method="_on_midi_message"]
+[connection signal="midi_message" from="MidiIn" to="." method="on_midi_message"]
 [connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="refresh"]
 [connection signal="pressed" from="HBoxContainerWidgets/ButtonRefresh" to="." method="_on_button_refresh_pressed"]
 [connection signal="item_selected" from="HBoxContainerWidgets/SelectMidiIn" to="." method="on_select_midi_in"]

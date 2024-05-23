@@ -67,6 +67,9 @@ func on_select_midi_in(index):
 	midi_in.close_port()
 	midi_in.open_port(index)
 	midi_in.ignore_types(false, false, false)
+	if midi_in.midi_message.is_connected(on_midi_message):
+		midi_in.midi_message.disconnect(on_midi_message)
+	midi_in.midi_message.connect(on_midi_message)
 
 func send_midi_message(data: Array, target: MidiOut = null):
 	if target == null:
@@ -86,13 +89,9 @@ func _on_button_pressed():
 	await Utils.sleep(0.5)
 	send_midi_message([Utils.NoteOff, note, 40], midi_out)
 
-func _on_midi_message(deltatime, message):
-	print(deltatime)
-	print(message)
+signal get_midi_in_message(deltatime, message)
 
-signal midi_in_message(event: InputEventMIDI)
-
-# func _unhandled_input(event: InputEvent):
-# 	if event is InputEventMIDI:
-# 		if event.controller_number == select_midi_in.selected:
-# 			midi_in_message.emit(event)
+func on_midi_message(deltatime, message):
+	# print(deltatime)
+	# print(message)
+	get_midi_in_message.emit(deltatime, message)
