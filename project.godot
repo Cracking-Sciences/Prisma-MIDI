@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 Utils="*res://Scripts/utils.gd"
-Smf="*res://Scripts/SMF.gd"
 
 [debug]
 

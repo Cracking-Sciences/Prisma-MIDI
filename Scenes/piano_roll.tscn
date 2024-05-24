@@ -22,22 +22,22 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
-[node name="FallingNotes" type="HBoxContainer" parent="PianoRollContainer"]
+[node name="NoteArea" type="Control" parent="PianoRollContainer"]
+custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 
-[node name="NoteArea" type="Control" parent="PianoRollContainer/FallingNotes"]
-layout_mode = 2
-
-[node name="note" type="Panel" parent="PianoRollContainer/FallingNotes/NoteArea"]
+[node name="note" type="Panel" parent="PianoRollContainer/NoteArea"]
+visible = false
 layout_mode = 0
-offset_right = 16.0
-offset_bottom = 167.0
+offset_right = 20.0
+offset_bottom = 100.0
 script = ExtResource("2_2kehm")
 
-[node name="VSlider" type="VSlider" parent="PianoRollContainer/FallingNotes"]
-custom_minimum_size = Vector2(20, 0)
-layout_mode = 2
-step = 0.1
+[node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 10.0
+color = Color(1, 1, 1, 0.376471)
 
 [node name="Piano" type="Control" parent="PianoRollContainer"]
 custom_minimum_size = Vector2(0, 200)
@@ -45,29 +45,78 @@ layout_mode = 2
 mouse_filter = 1
 script = ExtResource("1_jqdrl")
 
+[node name="HBoxContainerPlay" type="HBoxContainer" parent="PianoRollContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+layout_mode = 2
+text = "FallSpeed"
+
+[node name="LabelFallSpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "1.0"
+horizontal_alignment = 1
+clip_text = true
+
+[node name="HSliderFallSpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.2
+max_value = 3.0
+step = 0.1
+value = 1.0
+
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+layout_mode = 2
+text = "PlaySpeed
+"
+
+[node name="LabelPlaySpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "1.0"
+horizontal_alignment = 1
+clip_text = true
+
+[node name="HSliderPlaySpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.2
+max_value = 3.0
+step = 0.1
+value = 1.0
+
+[node name="ButtonPlay" type="Button" parent="PianoRollContainer/HBoxContainerPlay"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+toggle_mode = true
+text = "Play"
+
+[node name="HSliderProgress" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+layout_mode = 2
+size_flags_vertical = 1
+step = 0.1
+
 [node name="HBoxContainerWidgets" type="HBoxContainer" parent="PianoRollContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-
-[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
-layout_mode = 2
-text = "Height"
-
-[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.01
-max_value = 0.4
-step = 0.01
-value = 0.1
 
 [node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
 text = "Octaves"
 
+[node name="LabelOctaves" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "5"
+horizontal_alignment = 1
+clip_text = true
+
 [node name="HSliderOctaves" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 1.0
@@ -76,10 +125,54 @@ value = 7.0
 
 [node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
+text = "Oct+"
+
+[node name="LabelOct" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="HSliderMiddleOctave" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = -4.0
+max_value = 4.0
+value = 3.0
+
+[node name="Label6" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "JudgeLine"
+
+[node name="HSliderJudgeLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.7
+max_value = 1.0
+step = 0.025
+value = 0.9
+
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "Height"
+
+[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.01
+max_value = 0.4
+step = 0.01
+value = 0.1
+
+[node name="Label5" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
 text = "BlackWidth"
 
 [node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 0.4
@@ -93,7 +186,7 @@ text = "BlackHeight
 "
 
 [node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 0.1
@@ -101,7 +194,13 @@ max_value = 1.0
 step = 0.05
 value = 0.7
 
-[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderHeight" to="." method="change_piano_height"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerPlay/HSliderPlaySpeed" to="." method="change_play_speed"]
+[connection signal="toggled" from="PianoRollContainer/HBoxContainerPlay/ButtonPlay" to="." method="play_stop"]
+[connection signal="drag_ended" from="PianoRollContainer/HBoxContainerPlay/HSliderProgress" to="." method="manual_change_progress_end"]
+[connection signal="drag_started" from="PianoRollContainer/HBoxContainerPlay/HSliderProgress" to="." method="manual_change_progress_start"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderOctaves" to="." method="change_piano_octaves"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderMiddleOctave" to="." method="change_piano_middle_octave"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine" to="." method="change_judge_line"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderHeight" to="." method="change_piano_height"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackWidth" to="." method="change_piano_black_width"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight" to="." method="change_piano_black_height"]

@@ -59,7 +59,7 @@ layout_mode = 2
 text = "Select Tracks ↓"
 
 [node name="PopupMenuSelectTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks"]
-size = Vector2i(60, 240)
+size = Vector2i(400, 400)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks"]
 anchors_preset = 15
@@ -67,8 +67,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = 396.0
+offset_bottom = 396.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -82,7 +82,7 @@ script = ExtResource("2_423k2")
 
 [node name="ButtonGenerateMap" type="Button" parent="VBoxContainer/HBoxContainerScore"]
 layout_mode = 2
-text = "Generate Map"
+text = "Generate"
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Load MIDI File"
@@ -105,4 +105,5 @@ show_hidden_files = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="on_send_some_notes"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonOpenScore" to="." method="on_open_file_dialog"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonSelectTracks" to="." method="on_button_select_tracks_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonGenerateMap" to="." method="on_button_generate_map"]
 [connection signal="file_selected" from="FileDialog" to="." method="on_file_dialog_selected"]

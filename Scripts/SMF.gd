@@ -388,7 +388,9 @@ func _read( input:StreamPeerBuffer ) -> SMFData:
 
 	smf.format_type = header.stream.get_u16( )
 	smf.track_count = header.stream.get_u16( )
-	smf.timebase = header.stream.get_u16( )
+	smf.timebase = header.stream.get_u16( ) # Time Division
+	# if the first bit is 0: TPQN
+	# else: SMPTE
 
 	for i in range( 0, smf.track_count ):
 		var track = self._read_track( input, i )

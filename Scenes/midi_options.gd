@@ -29,7 +29,8 @@ var popup_menu_select_tracks = $VBoxContainer/HBoxContainerScore/ButtonSelectTra
 @onready
 var select_tracks_container = $VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer
 @onready
-var generate_map = $VBoxContainer/HBoxContainerScore/ButtonSelectTracks
+var button_generate_map = $VBoxContainer/HBoxContainerScore/ButtonGenerateMap
+
 func _ready():
 	refresh()
 	get_viewport().files_dropped.connect(on_files_dropped)
@@ -138,7 +139,7 @@ func update_popup_menu_select_tracks(tracks:Array[SMF.MIDITrack]):
 	for track in tracks:
 		var new_checkbox = select_tracks_container.get_node("CheckBoxTemplate").duplicate()
 		new_checkbox.name = str(track.track_number)
-		new_checkbox.text = str(track.track_number)
+		new_checkbox.text = Utils.get_track_name(track)
 		new_checkbox.track_number = track.track_number
 		new_checkbox.button_pressed = true
 		new_checkbox.visible = true
@@ -152,3 +153,8 @@ func get_selected_tracks() -> Array[SMF.MIDITrack]:
 		if child.button_pressed:
 			array.append(smf_result.data.tracks[child.track_number])
 	return array
+
+signal generate_map
+
+func on_button_generate_map():
+	generate_map.emit()

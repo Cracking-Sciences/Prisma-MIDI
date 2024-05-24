@@ -4,11 +4,14 @@ extends Control
 var midi_options = $MidiOptions
 @onready
 var piano = $PianoRoll/PianoRollContainer/Piano
+@onready
+var piano_roll = $PianoRoll
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	piano.note_on_off.connect(self.note_on_off)
 	midi_options.get_midi_in_message.connect(self.on_midi_in_message)
+	midi_options.generate_map.connect(self.on_generate_map)
 
 func note_on_off(is_on, note, velocity):
 	if is_on:
@@ -18,8 +21,8 @@ func note_on_off(is_on, note, velocity):
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
-		var piano_roll = $PianoRoll
-		piano_roll.custom_minimum_size = get_viewport_rect().size
+		if piano_roll != null:
+			piano_roll.custom_minimum_size = get_viewport_rect().size
 
 func on_midi_in_message(_deltatime, message):
 	if len(message) != 3:
@@ -42,3 +45,9 @@ func on_midi_in_message(_deltatime, message):
 			key.activate(message[2])
 		else:
 			key.deactivate(message[2])
+
+func on_generate_map():
+	if midi_options.smf_result == null:
+		return
+	piano_roll.generate_map(midi_options.smf_result.data)
+	
