@@ -6,7 +6,7 @@ var is_playing = false
 var judge_line_ratio = 0.9 # notes can be hit out of order when falling over this ratio
 var play_speed = 1.0
 
-
+var auto_play = true
 
 @onready
 var piano_roll_container = $PianoRollContainer
@@ -17,7 +17,7 @@ var note_template = $PianoRollContainer/NoteArea/note
 @onready
 var piano = $PianoRollContainer/Piano
 
-
+var parent = null
 
 @onready
 var judge_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine
@@ -74,10 +74,10 @@ func _process(delta):
 				cut_tail(event.note)
 			SMF.MIDIEventType.note_on:
 				# print("note on, ", event.note, " ", event.velocity)
-				add_note_child(event.note)
+				add_note_child(event.note, event.velocity)
 			_:
 				pass
-
+	trigger_from_note_children()
 	clear_fell_below_note_children()
 
 # for notes
@@ -95,15 +95,22 @@ func clear_fell_below_note_children():
 	for note_children in note_children_list:
 		for note_child in note_children:
 			if note_child.fell_below:
+				if auto_play:
+					var key = piano.get_key(note_child.note)
+					if key == null and parent != null:
+						parent.note_on_off(false, note_child.note, 100)
+					else:
+						key.deactivate(100)
 				note_children.erase(note_child)
 				note_area.remove_child(note_child)
 				note_child.queue_free()
 
-func add_note_child(note):
+func add_note_child(note, velocity):
 	var note_child = note_template.duplicate()
 	note_child.note = note
+	note_child.velocity = velocity
 	note_child.falling_ratio = 0.0
-	note_child.length_ratio = 100.0
+	note_child.length_ratio = 1000.0 # long enough
 	note_child.is_falling = true
 	note_child.visible = true
 	note_reposition_x(note_child)
@@ -136,6 +143,26 @@ func note_is_falling_all(is_falling = false):
 		for note_child in note_children:
 			note_child.is_falling = is_falling
 
+func trigger_from_note_children():
+	var note_children_list = note_children_map.values()
+	for note_children in note_children_list:
+		for note_child in note_children:
+			if not note_child.triggered:
+				if note_child.falling_ratio >= 1: # hit the end
+					note_child.triggered = true
+					if auto_play:
+						var key = piano.get_key(note_child.note)
+						if key == null and parent != null:
+							parent.note_on_off(true, note_child.note, note_child.velocity)
+						else:
+							key.activate(note_child.velocity)
+
+
+
+
+
+
+
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		if piano_roll_container == null:
@@ -166,15 +193,15 @@ func set_all():
 	play_speed_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_play_speed(play_speed_slider.value)
 	
-	progress_slider.custom_minimum_size.x = piano_roll_container.custom_minimum_size.x - 600
+	progress_slider.custom_minimum_size.x = piano_roll_container.custom_minimum_size.x - 460
 	progress_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 
 func change_piano_height(ratio):
-	# and note area, judgeline
+	# and note_area, judgeline
 	var height = get_viewport_rect().size.y * ratio
 	piano.custom_minimum_size.y = height
 	var widgets = $PianoRollContainer/HBoxContainerWidgets
-	note_area.custom_minimum_size.y = get_viewport_rect().size.y * (1 - ratio) - widgets.size.y - 50
+	note_area.custom_minimum_size.y = get_viewport_rect().size.y * (1 - ratio) - widgets.size.y * 2
 	note_area.custom_minimum_size.x = get_viewport_rect().size.x
 	change_judge_line(judge_line_ratio)
 
@@ -230,6 +257,7 @@ func clear_map():
 	ready_to_play = false
 
 func generate_map(smf_data:SMF.SMFData):
+	clear_all_note_children()
 	events_and_status = Utils.get_events_and_status(smf_data)
 	ready_to_play = true
 

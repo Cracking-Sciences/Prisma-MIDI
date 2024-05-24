@@ -1,6 +1,7 @@
 extends Panel
 
 var note = 60
+var velocity = 100
 
 var falling_speed = 1 # % area.y per second
 var falling_ratio = 0
@@ -8,15 +9,16 @@ var length_ratio = 0.1
 
 
 var is_falling = false
-var fell_below = false
+var fell_below = false # and should release
 var tail_cut = false
 
-# Called when the node enters the scene tree for the first time.
+var triggered = false
+
+
 func _ready():
 	reposition_y()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if is_falling and not fell_below:
 		falling_ratio += falling_speed * delta
@@ -26,8 +28,8 @@ func _process(delta):
 
 
 func reposition_y():
-	size.y = get_viewport_rect().size.y * length_ratio
-	position.y = get_viewport_rect().size.y * falling_ratio - size.y
+	size.y = get_parent().custom_minimum_size.y * length_ratio
+	position.y = get_parent().custom_minimum_size.y * falling_ratio - size.y
 
 func cut_tail():
 	if not tail_cut:

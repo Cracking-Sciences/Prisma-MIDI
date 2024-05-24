@@ -12,6 +12,7 @@ func _ready():
 	piano.note_on_off.connect(self.note_on_off)
 	midi_options.get_midi_in_message.connect(self.on_midi_in_message)
 	midi_options.generate_map.connect(self.on_generate_map)
+	piano_roll.parent = self
 
 func note_on_off(is_on, note, velocity):
 	if is_on:

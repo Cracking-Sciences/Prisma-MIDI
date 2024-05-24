@@ -44,7 +44,7 @@ func set_octaves():
 func resize_keys():
 	if keys_octaves.size() == 0:
 		return
-	var margin_key_gap = (size.x) / (num_octaves * 7 + 2)
+	var margin_key_gap = (size.x) / (num_octaves * 12 + 2)
 	var octave_width = (size.x - margin_key_gap * 2)/ num_octaves
 	var octave_height = size.y
 	for i in range(num_octaves):
