@@ -3,7 +3,7 @@ extends Control
 var keys: Array = []
 var height = 300.0
 var width = 400.0
-var white_gap_ratio = 0.15 			# leave some gap between keys
+var white_gap_ratio = 0.10 			# leave some gap between keys
 var black_height_ratio = 0.70 		# compare to single white key
 var black_width_ratio = 0.65 		# compare to single white key
 

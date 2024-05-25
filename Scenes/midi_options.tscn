@@ -41,7 +41,11 @@ allow_reselect = true
 
 [node name="ButtonSendSomeNotes" type="Button" parent="VBoxContainer/HBoxContainerDevice"]
 layout_mode = 2
-text = "Send some notes"
+text = "Random Note"
+
+[node name="ButtonMuteAll" type="Button" parent="VBoxContainer/HBoxContainerDevice"]
+layout_mode = 2
+text = "Note Off ALL"
 
 [node name="HBoxContainerScore" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -101,8 +105,8 @@ show_hidden_files = true
 [connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiIn" to="." method="on_select_midi_in"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="_on_select_midi_out_item_selected"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="on_select_midi_out"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="on_send_some_notes"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonMuteAll" to="." method="on_key_off_all"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonOpenScore" to="." method="on_open_file_dialog"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonSelectTracks" to="." method="on_button_select_tracks_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonGenerateMap" to="." method="on_button_generate_map"]

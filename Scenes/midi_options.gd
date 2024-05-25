@@ -103,6 +103,10 @@ func on_send_some_notes():
 	await Utils.sleep(0.5)
 	send_midi_message([Utils.NoteOff, note, 40], midi_out)
 
+func on_key_off_all():
+	for i in range(0, 127):
+		send_midi_message([Utils.NoteOff, i, 40], midi_out)
+
 signal get_midi_in_message(deltatime, message)
 
 func on_midi_message(deltatime, message):

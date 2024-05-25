@@ -25,7 +25,8 @@ func activate(velocity, new_color = null):
 	is_activate = true
 	if new_color == null:
 		new_color = active_color
-	color = (new_color * velocity + start_color * (128 - velocity)) / 128
+	color = (new_color * velocity + start_color * (128 - velocity) * 0.5) / 96
+	color.a = 1
 	if piano != null:
 		piano.note_on_off.emit(true, note, velocity)
 

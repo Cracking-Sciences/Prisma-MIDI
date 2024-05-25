@@ -21,7 +21,11 @@ func _ready():
 
 func _process(delta):
 	if is_falling and not fell_below:
-		falling_ratio += falling_speed * delta
+		var delta_ratio = falling_speed * delta
+		if falling_ratio <= 1.0 + delta_ratio:
+			falling_ratio += delta_ratio
+		else:
+			length_ratio -= delta_ratio
 		reposition_y()
 		if length_ratio + 1.0 < falling_ratio:
 			fell_below = true

@@ -6,8 +6,13 @@ var keys_octaves: Array
 var note_to_key: Dictionary
 var middle_octave: int = 0
 
+var white_gap_ratio = 0.10
 var black_width_ratio = 0.65
 var black_height_ratio = 0.70
+
+var note_width = 0.0
+var note_width_shrink = 0.0
+
 
 const keys_octave = preload("res://Scenes/keys_octave.tscn")
 
@@ -48,12 +53,16 @@ func resize_keys():
 	var octave_width = (size.x - margin_key_gap * 2)/ num_octaves
 	var octave_height = size.y
 	for i in range(num_octaves):
+		keys_octaves[i].white_gap_ratio = white_gap_ratio
 		keys_octaves[i].height = octave_height
 		keys_octaves[i].width = octave_width
 		keys_octaves[i].black_width_ratio = black_width_ratio
 		keys_octaves[i].black_height_ratio = black_height_ratio
 		keys_octaves[i].resize()
 		keys_octaves[i].set_position(Vector2(i*octave_width + margin_key_gap, 0))
+	
+	note_width = (size.x) / (num_octaves * 12 + 2)
+	note_width_shrink = octave_width / 7 * white_gap_ratio
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
@@ -85,17 +94,15 @@ func get_key(note) -> Key:
 	return null
 
 func get_note_width():
-	return (size.x) / (num_octaves * 12 + 2)
+	return note_width - note_width_shrink
 
 func get_note_x(note) -> float:
-	var note_width = get_note_width()
 	if note >= note_min and note <= note_max:
-		return (note - note_min + 1) * note_width
+		return (note - note_min + 1) * note_width + note_width_shrink / 2
 	if note < note_min:
-		return 0
+		return note_width_shrink / 2
 	elif note > note_max:
-		return (size.x) - note_width
+		return (size.x) - note_width + note_width_shrink / 2
 	else:
 		# impossible
 		return -100
-
