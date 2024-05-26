@@ -26,7 +26,7 @@ func _process(delta):
 		var delta_ratio = falling_speed * delta
 		falling_ratio += delta_ratio
 		reposition_y()
-		if length_ratio + 1.0 < falling_ratio:
+		if length_ratio + 1 + delta_ratio < falling_ratio:
 			fell_below = true
 
 

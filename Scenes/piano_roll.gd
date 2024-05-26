@@ -62,7 +62,7 @@ func _ready():
 	set_all()
 	resize_timer.start()
 
-var last_delta
+var last_delta = 0
 func _process(delta):
 	if stopped_prisma_note_count > 0:
 		note_is_falling_all(false)
@@ -126,7 +126,7 @@ func clear_all_note_children():
 			note_area.remove_child(note_child)
 			note_child.queue_free()
 	note_children_map.clear()
-	prisma_links.clear()
+	prisma_links_reset()
 	stopped_prisma_note_count = 0
 
 func note_off_all_note_children():
@@ -143,10 +143,10 @@ func clear_fell_below_note_child(note_children, note_child):
 			if not note_child.released:
 				note_on_off_note_child(false, note_child)
 				note_child.released = true
-			if note_child.released:
-				note_children.erase(note_child)
-				note_area.remove_child(note_child)
-				note_child.queue_free()
+		if note_child.released:
+			note_children.erase(note_child)
+			note_area.remove_child(note_child)
+			note_child.queue_free()
 
 func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
 	var note_child = note_template.duplicate()
@@ -200,8 +200,10 @@ func trigger_from_note_child(_note_children, note_child):
 				stopped_prisma_note_count += 1
 				# note_is_falling_all(false)
 			else:
-				note_on_off_note_child(true, note_child)
-				note_child.set_triggered()
+				if note_child.falling_ratio >= 1 + last_delta * fall_speed:
+					# so it will be triggered after prisma note if arrive at same time
+					note_on_off_note_child(true, note_child)
+					note_child.set_triggered()
 
 
 func note_on_off_note_child(is_on, note_child):
@@ -379,7 +381,7 @@ func play_stop(is_play):
 		is_playing = false
 		note_is_falling_all(false)
 		note_off_all_note_children()
-		prisma_links.clear()
+		prisma_links_reset()
 
 var referece_lines: Array
 
@@ -400,7 +402,41 @@ func set_referece_lines():
 		new_line.size.x = 1 + get_viewport_rect().size.y / 500
 
 var prisma_links: Dictionary = {} # key to linked prisma notes
+var link_lines: Dictionary = {} # draw instrumental lines
 
+func prisma_links_add(note, note_child):
+	if note not in prisma_links:
+		prisma_links[note] = []
+	prisma_links[note].append({"note_child": note_child, "note": note_child.note})
+
+
+	var line = Line2D.new()
+	line.width = 1 + get_viewport_rect().size.y / 200
+	line.default_color = note_child.modulate
+	var x_from = piano.get_note_x(note)
+	var x_to = piano.get_note_x(note_child.note)
+	var key_size = piano.get_key_size(note)
+	var pos_from = Vector2(x_from + (key_size.x - line.width)/ 2 , piano.position.y + key_size.y)
+	var pos_to = Vector2(x_to +  (key_size.x - line.width) / 2, piano.position.y)
+	line.points = [pos_from, pos_to]
+	add_child(line)
+
+	if note not in link_lines:
+		link_lines[note] = []
+	link_lines[note].append(line)
+
+
+
+func prisma_links_remove(note):
+	prisma_links[note].clear()
+	for line in link_lines[note]:
+		remove_child(line)
+		line.queue_free()
+	link_lines[note].clear()
+
+func prisma_links_reset():
+	for note in prisma_links:
+		prisma_links_remove(note)
 
 func manual_note_on_off(is_on, note, velocity, from_key):
 	# find a neareast prisma note
@@ -439,9 +475,7 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 			keyless_note_on_off(key, is_on, chosen_note_child.note, velocity, chosen_note_child.modulate)
 			chosen_note_child.set_triggered()
 			chosen_note_child.brighter()
-			if note not in prisma_links:
-				prisma_links[note] = []
-			prisma_links[note].append(chosen_note_child)
+			prisma_links_add(note, chosen_note_child)
 
 			if chosen_note_child.falling_ratio >= 1:
 				stopped_prisma_note_count -= 1
@@ -467,12 +501,13 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 		var key = piano.get_key(note)
 		keyless_note_on_off(key, is_on, note, velocity) # normal key should deactivate too
 		if note in prisma_links:
-			for note_child in prisma_links[note]:
+			for note_child_record in prisma_links[note]:
+				var note_child = note_child_record.note_child
 				if note_child != null:
 					key = piano.get_key(note_child.note)
 					keyless_note_on_off(key, is_on, note_child.note, velocity)
 					note_child.set_released()
-			prisma_links[note].clear()
+			prisma_links_remove(note)
 
 func keyless_note_on_off(key, is_on, note, velocity, color = null):
 	if key != null:

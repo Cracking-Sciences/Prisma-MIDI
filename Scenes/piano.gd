@@ -121,3 +121,6 @@ func get_note_x(note) -> float:
 
 func get_reference_xs() -> Array:
 	return referece_xs
+
+func get_key_size(note):
+	return keys_octaves[0].keys[note % 12].size
