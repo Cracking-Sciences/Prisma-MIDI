@@ -101,6 +101,7 @@ class EventsAndStatus:
 	var tempo
 	var seconds_to_timebase
 	var timebase_to_seconds
+	var ticks_per_second 
 
 	var position = 0.0 # time
 	var last_position: int = 0 # time
@@ -109,6 +110,7 @@ class EventsAndStatus:
 		self.tempo = bpm
 		self.seconds_to_timebase = self.tempo / 60.0
 		self.timebase_to_seconds = 60.0 / self.tempo
+		self.ticks_per_second = self.timebase * self.seconds_to_timebase
 
 	func seek(to_position: float) -> void:
 		var pointer: int = 0
@@ -132,12 +134,14 @@ class EventsAndStatus:
 						return ""
 		return ""
 
-func get_events_and_status(smf_data:SMF.SMFData)->EventsAndStatus:
+func get_events_and_status(smf_data:SMF.SMFData, selected_tracks)->EventsAndStatus:
 	# Mix multiple tracks to single track
 	var tracks:Array[Dictionary] = []
 	for track in smf_data.tracks:
-		tracks.append({"track_id": track.track_number, "pointer":0, "events":track.events, "length": len( track.events )})
-
+		if track.track_number in selected_tracks:
+			tracks.append({"track_id": track.track_number, "pointer":0, "events":track.events, "length": len( track.events )})
+	if len(tracks) == 0:
+		return null
 	var events_and_status = EventsAndStatus.new()
 	var time:int = 0
 	var finished:bool = false
@@ -163,8 +167,8 @@ func get_events_and_status(smf_data:SMF.SMFData)->EventsAndStatus:
 
 	events_and_status.last_position = events_and_status.events[-1].midi_event_chunk.time
 	events_and_status.event_pointer = 0
-	events_and_status.set_tempo(80)
 	events_and_status.timebase = smf_data.timebase
+	events_and_status.set_tempo(80)
 	return events_and_status
 
 
@@ -177,17 +181,18 @@ func is_need_map_info(event: SMF.MIDIEventChunk)->bool:
 			return false
 	return true
 
+var track_to_color: Dictionary = {}
 func get_color_for_note(note, _velocity, track_number)->Color:
-	var base_hue = 120.0  # 基础色相 (可以调整)
-	var hue_step = 75  # 色相步长
-	var saturation = 0.5  # 低饱和度
-	var value = 0.8  # 不过于暗淡
-	var color
+	if not (track_number in track_to_color):
+		var base_hue = 120.0  # 基础色相 (可以调整)
+		var hue_step = 75  # 色相步长
+		var saturation = 0.5  # 低饱和度
+		var value = 0.8  # 不过于暗淡
+		track_to_color[track_number] = \
+			[Color.from_hsv(fmod(base_hue + track_number * hue_step, 360) / 360, saturation * 0.6, value), \
+			Color.from_hsv(fmod(base_hue + track_number * hue_step, 360) / 360, saturation, value * 0.6)]
 	if (note % 12) in [1,3, 6, 8, 10]:
-		# sharp note
-		color = Color.from_hsv(fmod(base_hue + track_number * hue_step, 360) / 360, saturation, value * 0.78)
+		return track_to_color[track_number][1]
 	else:
-		color = Color.from_hsv(fmod(base_hue + track_number * hue_step, 360) / 360, saturation * 0.6, value)
-	return color
-	
+		return track_to_color[track_number][0]
 

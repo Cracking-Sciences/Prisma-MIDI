@@ -10,19 +10,21 @@ var white_gap_ratio = 0.10
 var black_width_ratio = 0.65
 var black_height_ratio = 0.70
 
+const keys_octave = preload("res://Scenes/keys_octave.tscn")
+
+
 var note_width = 0.0
 var note_width_shrink = 0.0
 
-
-const keys_octave = preload("res://Scenes/keys_octave.tscn")
-
 var note_min = 0
 var note_max = 0
+
+var referece_xs = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_octaves()
 	resize_keys()
-
 
 func set_octaves():
 	for child in keys_octaves:
@@ -43,8 +45,10 @@ func set_octaves():
 				# unclamped
 				note_to_key[temp_note] = key
 			j = j + 1
+
 	note_min = keys_octaves[0].keys[0].note
 	note_max = keys_octaves[-1].keys[-1].note
+
 
 func resize_keys():
 	if keys_octaves.size() == 0:
@@ -62,7 +66,15 @@ func resize_keys():
 		keys_octaves[i].set_position(Vector2(i*octave_width + margin_key_gap, 0))
 	
 	note_width = (size.x) / (num_octaves * 12 + 2)
-	note_width_shrink = octave_width / 7 * white_gap_ratio
+	var white_gap = octave_width / 7 * white_gap_ratio
+	# note_width_shrink = white_gap
+	note_width_shrink = 0
+	referece_xs.clear()
+	for i in range(num_octaves):
+		referece_xs.append(margin_key_gap + octave_width * i - white_gap / 2)
+		referece_xs.append(margin_key_gap + octave_width * i + octave_width * 5 / 12 - white_gap / 2)
+	referece_xs.append(size.x - margin_key_gap)
+
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
@@ -106,3 +118,6 @@ func get_note_x(note) -> float:
 	else:
 		# impossible
 		return -100
+
+func get_reference_xs() -> Array:
+	return referece_xs

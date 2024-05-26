@@ -14,6 +14,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7ujpr")
 
+[node name="ColorRectMask" type="ColorRect" parent="."]
+z_index = 5
+layout_mode = 0
+offset_top = 563.0
+offset_right = 1146.0
+offset_bottom = 710.0
+mouse_filter = 2
+color = Color(0.266575, 0.266575, 0.266575, 1)
+
 [node name="PianoRollContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -28,6 +37,7 @@ custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 
 [node name="note" type="Panel" parent="PianoRollContainer/NoteArea"]
+z_index = -2
 layout_mode = 0
 offset_left = -115.0
 offset_top = 84.0
@@ -40,7 +50,14 @@ script = ExtResource("2_2kehm")
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 10.0
-color = Color(1, 1, 1, 0.376471)
+color = Color(1, 1, 1, 0.196078)
+
+[node name="ReferenceLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+layout_mode = 0
+offset_left = -163.0
+offset_right = -152.0
+offset_bottom = 376.0
+color = Color(1, 1, 1, 0.0901961)
 
 [node name="Piano" type="Control" parent="PianoRollContainer"]
 custom_minimum_size = Vector2(0, 200)
@@ -48,7 +65,18 @@ layout_mode = 2
 mouse_filter = 1
 script = ExtResource("1_jqdrl")
 
+[node name="ColorRectPianoMask" type="ColorRect" parent="PianoRollContainer/Piano"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.266667, 0.266667, 0.266667, 1)
+
 [node name="HBoxContainerPlay" type="HBoxContainer" parent="PianoRollContainer"]
+z_index = 10
 layout_mode = 2
 
 [node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
@@ -69,7 +97,7 @@ size_flags_vertical = 1
 min_value = 0.1
 max_value = 3.0
 step = 0.1
-value = 0.5
+value = 1.0
 
 [node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
 layout_mode = 2
@@ -110,6 +138,7 @@ size_flags_vertical = 1
 step = 0.1
 
 [node name="HBoxContainerWidgets" type="HBoxContainer" parent="PianoRollContainer"]
+z_index = 10
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
@@ -158,10 +187,10 @@ text = "JudgeLine"
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
-min_value = 0.7
-max_value = 1.0
+min_value = 0.025
+max_value = 0.5
 step = 0.025
-value = 0.9
+value = 0.15
 
 [node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
@@ -203,6 +232,7 @@ max_value = 1.0
 step = 0.05
 value = 0.7
 
+[connection signal="resized" from="." to="." method="on_resized"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerPlay/HSliderFallSpeed" to="." method="change_fall_speed"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerPlay/HSliderPlaySpeed" to="." method="change_play_speed"]
 [connection signal="toggled" from="PianoRollContainer/HBoxContainerPlay/ButtonPlay" to="." method="play_stop"]

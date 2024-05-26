@@ -42,13 +42,10 @@ func on_midi_in_message(_deltatime, message):
 		note_on_off(is_on, message[1], message[2])
 	else:
 		# trigger from the key
-		if is_on:
-			key.activate(message[2])
-		else:
-			key.deactivate(message[2])
+		piano_roll.manual_note_on_off(is_on, message[1], message[2], key)
 
 func on_generate_map():
 	if midi_options.smf_result == null:
 		return
-	piano_roll.generate_map(midi_options.smf_result.data)
-	
+	piano_roll.generate_map(midi_options.smf_result.data, midi_options.get_selected_tracks_number())
+	piano_roll.get_prisma_tracks(midi_options.get_prisma_tracks_number())

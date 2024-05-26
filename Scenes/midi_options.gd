@@ -22,12 +22,25 @@ var select_midi_in = $VBoxContainer/HBoxContainerDevice/SelectMidiIn
 var file_dialog = $FileDialog
 @onready
 var file_name = $VBoxContainer/HBoxContainerScore/TextFileName
+
 @onready
 var button_select_tracks = $VBoxContainer/HBoxContainerScore/ButtonSelectTracks
 @onready
 var popup_menu_select_tracks = $VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks
 @onready
 var select_tracks_container = $VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer
+
+
+@onready
+var button_prisma_tracks = $VBoxContainer/HBoxContainerScore/ButtonPrismaTracks
+@onready
+var popup_menu_prisma_tracks = $VBoxContainer/HBoxContainerScore/ButtonPrismaTracks/PopupMenuSelectTracks
+@onready
+var prisma_tracks_container = $VBoxContainer/HBoxContainerScore/ButtonPrismaTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer
+
+
+
+
 @onready
 var button_generate_map = $VBoxContainer/HBoxContainerScore/ButtonGenerateMap
 
@@ -135,6 +148,12 @@ func on_button_select_tracks_pressed():
 	popup_menu_select_tracks.position = button_select_tracks.position + Vector2(0,80)
 	popup_menu_select_tracks.popup()
 
+
+func on_button_prisma_tracks_pressed():
+	popup_menu_prisma_tracks.position = button_prisma_tracks.position + Vector2(0,80)
+	popup_menu_prisma_tracks.popup()
+	update_popup_menu_prisma_tracks()
+
 func update_popup_menu_select_tracks(tracks:Array[SMF.MIDITrack]):
 	for child in select_tracks_container.get_children():
 		if child.name != "CheckBoxTemplate":
@@ -149,14 +168,55 @@ func update_popup_menu_select_tracks(tracks:Array[SMF.MIDITrack]):
 		new_checkbox.visible = true
 		select_tracks_container.add_child(new_checkbox)
 
-func get_selected_tracks() -> Array[SMF.MIDITrack]:
-	var array:Array[SMF.MIDITrack] = []
+
+func update_popup_menu_prisma_tracks():
+	prisma_tracks = get_prisma_tracks_number()
+	for child in prisma_tracks_container.get_children():
+		if child.name != "CheckBoxTemplate":
+			prisma_tracks_container.remove_child(child)
+			child.queue_free()
+	var selected = get_selected_tracks_number_and_name()
+	for e in selected:
+		var new_checkbox = prisma_tracks_container.get_node("CheckBoxTemplate").duplicate()
+		new_checkbox.name = str(e.number)
+		new_checkbox.text = e.name
+		new_checkbox.track_number = e.number
+		if e.number in prisma_tracks:
+			new_checkbox.button_pressed = true
+		else:
+			new_checkbox.button_pressed = false
+		new_checkbox.visible = true
+		prisma_tracks_container.add_child(new_checkbox)
+
+
+func get_selected_tracks_number():
+	var answer = []
 	for child in select_tracks_container.get_children():
 		if child.name == "CheckBoxTemplate":
 			continue
 		if child.button_pressed:
-			array.append(smf_result.data.tracks[child.track_number])
-	return array
+			answer.append(child.track_number)
+	return answer
+
+func get_selected_tracks_number_and_name():
+	var answer = []
+	for child in select_tracks_container.get_children():
+		if child.name == "CheckBoxTemplate":
+			continue
+		if child.button_pressed:
+			answer.append({"number": child.track_number, "name": child.text})
+	return answer
+
+var prisma_tracks = []
+
+func get_prisma_tracks_number():
+	var answer = []
+	for child in prisma_tracks_container.get_children():
+		if child.name == "CheckBoxTemplate":
+			continue
+		if child.button_pressed:
+			answer.append(child.track_number)
+	return answer
 
 signal generate_map
 

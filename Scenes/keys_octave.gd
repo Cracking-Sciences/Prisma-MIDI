@@ -14,13 +14,13 @@ func _ready():
 	for i in range(12):
 		var new_key = key_scence.instantiate()
 		if i in [1,3,6,8,10]:
-			new_key.color = Color(0.1,0.1,0.1)
+			new_key.color = Color(0.15,0.15,0.15)
 			new_key.start_color = new_key.color
-			new_key.z_index = 1
+			new_key.default_z_index = 1
 		else:
-			new_key.color = Color(0.9,0.9,0.9)
+			new_key.color = Color(0.8,0.8,0.8)
 			new_key.start_color = new_key.color
-			new_key.z_index = 0
+			new_key.default_z_index = 0
 		add_child(new_key)
 		keys.append(new_key)
 	resize()

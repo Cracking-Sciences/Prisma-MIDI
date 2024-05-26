@@ -6,8 +6,15 @@ extends ColorRect
 @export var piano: Piano = null
 @export var active_color = Color.ORANGE # default active color
 
+@export var default_z_index = 0
+
+@onready
+var light = $PointLight2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	z_index = default_z_index
+	light.range_z_max = z_index
+	light.enabled = false
 	pass # Replace with function body.
 
 
@@ -23,12 +30,14 @@ func mouse_deactivate():
 
 func activate(velocity, new_color = null):
 	is_activate = true
-	if new_color == null:
-		new_color = active_color
-	color = (new_color * velocity + start_color * (128 - velocity) * 0.5) / 96
-	color.a = 1
 	if piano != null:
 		piano.note_on_off.emit(true, note, velocity)
+	if new_color == null:
+		new_color = active_color
+	color = (new_color * (128 + velocity)) / 256
+	color.a = 1
+	light.color = new_color
+	light.enabled = true
 
 func deactivate(velocity):
 	if is_activate:
@@ -36,7 +45,8 @@ func deactivate(velocity):
 		color = start_color
 		if piano != null:
 			piano.note_on_off.emit(false, note, velocity)
-
+	
+	light.enabled = false
 
 # slide:
 func _on_mouse_entered():
@@ -61,3 +71,10 @@ func _gui_input(input_event):
 func _on_change_mouse_pressed():
 	if not piano.get_mouse_pressed():
 		mouse_deactivate()
+
+# on resize
+var light_base_size = 30 # px
+func _on_resized():
+	light.position.x = size.x / 2
+	light.scale.x = size.x / light_base_size
+	light.scale.y = size.y / light_base_size

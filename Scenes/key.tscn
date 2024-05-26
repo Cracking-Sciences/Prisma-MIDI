@@ -1,12 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://b0o57oxm5mtqs"]
+[gd_scene load_steps=3 format=3 uid="uid://cxbndorm22oqk"]
 
-[ext_resource type="Script" path="res://Scenes/key.gd" id="1_fjtn1"]
+[ext_resource type="Script" path="res://Scenes/key.gd" id="1_o6whw"]
+[ext_resource type="Texture2D" uid="uid://cprqdm0cdtljp" path="res://assets/2d_lights_and_shadows_neutral_point_light.webp" id="2_3s2t6"]
 
-[node name="Key" type="ColorRect"]
+[node name="SingleKey" type="ColorRect"]
 offset_right = 4.288
 offset_bottom = 58.648
 mouse_default_cursor_shape = 2
-script = ExtResource("1_fjtn1")
+color = Color(0.466181, 0.466181, 0.466181, 1)
+script = ExtResource("1_o6whw")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(2, 0)
+energy = 0.7
+range_z_min = -2
+range_z_max = 3
+shadow_item_cull_mask = 0
+texture = ExtResource("2_3s2t6")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="resized" from="." to="." method="_on_resized"]
