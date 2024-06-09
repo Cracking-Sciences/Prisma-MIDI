@@ -50,7 +50,14 @@ script = ExtResource("2_2kehm")
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 10.0
-color = Color(1, 1, 1, 0.196078)
+color = Color(1, 0.75, 0.5, 0.196078)
+
+[node name="AcceptLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+layout_mode = 0
+offset_top = -30.0
+offset_right = 100.0
+offset_bottom = -20.0
+color = Color(1, 0.5, 0.5, 0.196078)
 
 [node name="ReferenceLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
 layout_mode = 0
@@ -181,22 +188,66 @@ value = 3.0
 
 [node name="Label6" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
-text = "JudgeLine"
+theme_override_colors/font_color = Color(1, 0.75, 0.5, 0.498039)
+text = "TolerateLine"
 
 [node name="HSliderJudgeLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
-min_value = 0.025
-max_value = 0.5
-step = 0.025
-value = 0.15
+min_value = 0.02
+max_value = 1.0
+step = 0.02
+value = 0.16
+
+[node name="Label7" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 0.498039)
+text = "AcceptLine"
+
+[node name="HSliderAcceptLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.02
+max_value = 1.0
+step = 0.02
+value = 0.3
 
 [node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
-text = "Height"
+text = "IgnoreFreeNote"
 
-[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="CheckButtonIgnoreFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+
+[node name="ButtonPopMore" type="Button" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "More Settings"
+
+[node name="PopupMenu" type="PopupPanel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore"]
+position = Vector2i(0, 300)
+size = Vector2i(100, 400)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "PianoHeight"
+
+[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -205,11 +256,11 @@ max_value = 0.4
 step = 0.01
 value = 0.1
 
-[node name="Label5" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label5" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "BlackWidth"
 
-[node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -218,12 +269,12 @@ max_value = 0.9
 step = 0.05
 value = 0.65
 
-[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "BlackHeight
 "
 
-[node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -231,6 +282,13 @@ min_value = 0.1
 max_value = 1.0
 step = 0.05
 value = 0.7
+
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "AlterNotes"
+
+[node name="CheckButtonAlterNotes" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
 
 [connection signal="resized" from="." to="." method="on_resized"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerPlay/HSliderFallSpeed" to="." method="change_fall_speed"]
@@ -241,6 +299,8 @@ value = 0.7
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderOctaves" to="." method="change_piano_octaves"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderMiddleOctave" to="." method="change_piano_middle_octave"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine" to="." method="change_judge_line"]
-[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderHeight" to="." method="change_piano_height"]
-[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackWidth" to="." method="change_piano_black_width"]
-[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight" to="." method="change_piano_black_height"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderAcceptLine" to="." method="change_accept_line"]
+[connection signal="pressed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore" to="." method="pop_more_settings"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderHeight" to="." method="change_piano_height"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderBlackWidth" to="." method="change_piano_black_width"]
+[connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderBlackHeight" to="." method="change_piano_black_height"]

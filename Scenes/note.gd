@@ -19,7 +19,8 @@ var released = false
 var parent = null
 
 func _ready():
-	pass
+	if note % 12 in [1,3,6,8,10]:
+		color_mul(1.0, 1.2)
 
 func _process(delta):
 	if is_falling and not fell_below:
@@ -36,9 +37,11 @@ func reposition_y():
 
 func cut_tail(latency_ratio = 0.0):
 	if not tail_cut:
-		length_ratio = falling_ratio - latency_ratio
+		length_ratio = max(falling_ratio - latency_ratio, 0.01) # lower bound, make it visible
 		reposition_y()
 		tail_cut= true
+		return true
+	return false
 
 func set_triggered():
 	triggered = true
@@ -49,7 +52,9 @@ func set_released():
 		return
 	triggered = true
 	released = true
-	modulate = (modulate * 0.5).clamp(Color(0, 0, 0, 0), Color(1, 1, 1, 1))
+	color_mul(0.5, 0.75)
 
-func brighter():
-	modulate = (modulate * 1.3).clamp(Color(0, 0, 0, 0), Color(1, 1, 1, 1))
+func color_mul(mul: float, a_mul: float = 1):
+	var a_backup = modulate.a
+	modulate = (modulate * mul).clamp(Color(0, 0, 0, 0), Color(1, 1, 1, 1))
+	modulate.a = a_backup * a_mul

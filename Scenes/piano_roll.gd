@@ -3,7 +3,8 @@ extends Control
 var events_and_status: Utils.EventsAndStatus = null
 var ready_to_play = false
 var is_playing = false
-var judge_line_ratio = 0.9 # notes can be hit out of order when falling over this ratio
+var judge_line_ratio = 0.2 # notes can be hit out of order when falling over this ratio
+var accept_line_ratio = 0.5
 var play_speed = 1.0
 var fall_speed = 1.0
 var auto_play = true
@@ -21,20 +22,32 @@ var piano = $PianoRollContainer/Piano
 
 var parent = null
 
-
-
-@onready
-var judge_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine
-@onready
-var height_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderHeight
 @onready
 var octaves_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderOctaves
 @onready
-var black_width_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderBlackWidth
-@onready
-var black_height_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderBlackHeight
-@onready
 var middle_octave_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderMiddleOctave
+@onready
+var judge_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine
+@onready
+var accept_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderAcceptLine
+@onready
+var ignore_free_note_check_button = $PianoRollContainer/HBoxContainerWidgets/CheckButtonIgnoreFreeNote
+
+
+@onready
+var more_settings_button = $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore
+@onready
+var popup_menu_more_settings = $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu
+@onready
+var height_slider = $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderHeight
+@onready
+var black_width_slider= $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderBlackWidth
+@onready
+var black_height_slider= $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderBlackHeight
+@onready
+var alter_notes_button = $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/CheckButtonAlterNotes
+
+
 @onready
 var play_speed_slider= $PianoRollContainer/HBoxContainerPlay/HSliderPlaySpeed
 @onready
@@ -56,7 +69,7 @@ var piano_mask = $PianoRollContainer/Piano/ColorRectPianoMask
 func _ready():
 	resize_timer = Timer.new()
 	add_child(resize_timer)
-	resize_timer.wait_time = 0.3
+	resize_timer.wait_time = 0.05
 	resize_timer.one_shot = true
 	resize_timer.timeout.connect(set_all)
 	set_all()
@@ -172,13 +185,15 @@ func cut_tail(note, latency_ratio = 0.0):
 	if note in note_children_map:
 		var note_children = note_children_map[note]
 		for note_child in note_children:
-			note_child.cut_tail(latency_ratio)
+			if note_child.cut_tail(latency_ratio) == true:
+				# only cut one note
+				break
 
 func note_reposition_x(_note_children, note_child):
 	if note_child == null:
 		return
-	note_child.position.x = piano.get_note_x(note_child.note)
-	note_child.size.x = piano.get_note_width()
+	note_child.position.x = piano.get_note_x(note_child.note, alter_notes_button.button_pressed)
+	note_child.size.x = piano.get_note_width(note_child.note, alter_notes_button.button_pressed)
 
 var note_is_falling_all_last_action = false
 func note_is_falling_all(is_falling = false):
@@ -245,6 +260,10 @@ func set_all():
 	piano.size.x = get_viewport_rect().size.x
 	judge_line_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_judge_line(judge_line_slider.value)
+
+	accept_line_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
+	change_accept_line(accept_line_slider.value)
+
 	piano_roll_container.custom_minimum_size = get_viewport_rect().size
 	note_area.custom_minimum_size.x = get_viewport_rect().size.x
 
@@ -269,7 +288,7 @@ func set_all():
 	fall_speed_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_fall_speed(fall_speed_slider.value)
 
-	progress_slider.custom_minimum_size.x = piano_roll_container.custom_minimum_size.x - 700
+	progress_slider.custom_minimum_size.x = piano_roll_container.custom_minimum_size.x - 570
 	progress_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 
 	set_referece_lines()
@@ -294,6 +313,7 @@ func change_piano_height(ratio):
 	note_area.custom_minimum_size.y = get_viewport_rect().size.y * (1 - ratio) - widgets.size.y * 2
 	note_area.custom_minimum_size.x = get_viewport_rect().size.x
 	change_judge_line(judge_line_ratio)
+	change_accept_line(accept_line_ratio)
 	set_referece_lines()
 
 func change_piano_octaves(num):
@@ -304,6 +324,10 @@ func change_piano_octaves(num):
 	middle_octave_slider.value = 0
 	$PianoRollContainer/HBoxContainerWidgets/LabelOctaves.text = str(num)
 	set_referece_lines()
+
+func pop_more_settings():
+	popup_menu_more_settings.position = more_settings_button.position
+	popup_menu_more_settings.popup()
 
 func change_piano_black_width(ratio):
 	piano.black_width_ratio = ratio
@@ -325,7 +349,16 @@ func change_judge_line(ratio):
 	note_area.get_node("JudgeLine").size.x = note_area.custom_minimum_size.x
 	note_area.get_node("JudgeLine").size.y = 1 + get_viewport_rect().size.y / 500
 	note_area.get_node("JudgeLine").position.y = note_area.custom_minimum_size.y * (1 - judge_line_ratio)
+	if judge_line_ratio > accept_line_ratio:
+		accept_line_slider.value = judge_line_ratio
 
+func change_accept_line(ratio):
+	accept_line_ratio = ratio
+	note_area.get_node("AcceptLine").size.x = note_area.custom_minimum_size.x
+	note_area.get_node("AcceptLine").size.y = 1 + get_viewport_rect().size.y / 500
+	note_area.get_node("AcceptLine").position.y = note_area.custom_minimum_size.y * (1 - accept_line_ratio)
+	if judge_line_ratio > accept_line_ratio:
+		judge_line_slider.value = accept_line_ratio
 
 func change_fall_speed(value):
 	fall_speed = value
@@ -365,6 +398,8 @@ func generate_map(smf_data:SMF.SMFData, selected_tracks):
 	if events_and_status==null:
 		return
 	ready_to_play = true
+	manual_change_progress_start()
+	manual_change_progress_end(0.0)
 
 func get_prisma_tracks(_tracks):
 	prisma_tracks = _tracks
@@ -413,18 +448,19 @@ func prisma_links_add(note, note_child):
 	var line = Line2D.new()
 	line.width = 1 + get_viewport_rect().size.y / 200
 	line.default_color = note_child.modulate
-	var x_from = piano.get_note_x(note)
-	var x_to = piano.get_note_x(note_child.note)
-	var key_size = piano.get_key_size(note)
-	var pos_from = Vector2(x_from + (key_size.x - line.width)/ 2 , piano.position.y + key_size.y)
-	var pos_to = Vector2(x_to +  (key_size.x - line.width) / 2, piano.position.y)
+	var x_from = piano.get_note_x(note, false)
+	var x_to = piano.get_note_x(note_child.note, false)
+	var x_offset = (piano.get_note_width(0,false) - line.width) / 2
+	var y_offset = piano.get_key_size(note).y
+	var pos_from = Vector2(x_from + x_offset , piano.position.y + y_offset)
+	var pos_to = Vector2(x_to + x_offset, piano.position.y)
 	line.points = [pos_from, pos_to]
+	line.z_index = 10
 	add_child(line)
 
 	if note not in link_lines:
 		link_lines[note] = []
 	link_lines[note].append(line)
-
 
 
 func prisma_links_remove(note):
@@ -441,7 +477,6 @@ func prisma_links_reset():
 func manual_note_on_off(is_on, note, velocity, from_key):
 	# find a neareast prisma note
 	if is_on:
-		# print(stopped_prisma_note_count)
 		var min_distance = 10000.0 # ratio
 		var chosen_note_child = null
 		var note_children_list = note_children_map.values()
@@ -454,27 +489,28 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 					continue
 				var weighted_distance
 				var vertical_dist_ratio = 1 - note_child.falling_ratio
-				if vertical_dist_ratio <= judge_line_slider.value:
+				if vertical_dist_ratio <= judge_line_ratio:
 					# beneath the judge line
-					var horizontal_dist_ratio = abs(piano.get_note_x(note) - note_child.position.x) / piano.size.x
+					var horizontal_dist_ratio = abs(piano.get_note_x(note, false) - note_child.position.x) / piano.size.x
 					weighted_distance = horizontal_dist_ratio + vertical_dist_ratio
 					above_judge_line = false
-				else:
+				elif vertical_dist_ratio <= accept_line_ratio:
+					# above the judge line, but under the accept line
 					weighted_distance = vertical_dist_ratio * 1000
+				else:
+					continue
 				if weighted_distance < min_distance:
 					min_distance = weighted_distance
 					chosen_note_child = note_child
-		# 		print(note_child.note, " ", weighted_distance)
-		# print(chosen_note_child.note)
 		if chosen_note_child == null:
 			# normal action:
-			keyless_note_on_off(from_key, is_on, note, velocity)
+			if not ignore_free_note_check_button.button_pressed:
+				keyless_note_on_off(from_key, is_on, note, velocity)
 		else:
 			# prisma action:
 			var key = piano.get_key(chosen_note_child.note)
 			keyless_note_on_off(key, is_on, chosen_note_child.note, velocity, chosen_note_child.modulate)
 			chosen_note_child.set_triggered()
-			chosen_note_child.brighter()
 			prisma_links_add(note, chosen_note_child)
 
 			if chosen_note_child.falling_ratio >= 1:
@@ -482,8 +518,7 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 				if stopped_prisma_note_count <= 0:
 					stopped_prisma_note_count = 0
 					note_is_falling_all(true)
-			# print(stopped_prisma_note_count)
-
+			chosen_note_child.color_mul(0.5, 0.5)
 			# add length
 			if above_judge_line:
 				# skip some time

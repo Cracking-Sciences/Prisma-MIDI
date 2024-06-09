@@ -13,7 +13,6 @@ var black_height_ratio = 0.70
 const keys_octave = preload("res://Scenes/keys_octave.tscn")
 
 
-var note_width = 0.0
 var note_width_shrink = 0.0
 
 var note_min = 0
@@ -64,8 +63,7 @@ func resize_keys():
 		keys_octaves[i].black_height_ratio = black_height_ratio
 		keys_octaves[i].resize()
 		keys_octaves[i].set_position(Vector2(i*octave_width + margin_key_gap, 0))
-	
-	note_width = (size.x) / (num_octaves * 12 + 2)
+
 	var white_gap = octave_width / 7 * white_gap_ratio
 	# note_width_shrink = white_gap
 	note_width_shrink = 0
@@ -105,16 +103,29 @@ func get_key(note) -> Key:
 		return note_to_key[note]
 	return null
 
-func get_note_width():
-	return note_width - note_width_shrink
+func get_note_width(note, alter=false):
+	if not alter:
+		return keys_octaves[0].width / 12
+	else:
+		if note % 12 in [1,3,6,8,10]:
+			#black
+			return keys_octaves[0].width / 7 * black_width_ratio - note_width_shrink
+		else:
+			#white
+			return keys_octaves[0].width / 7 - note_width_shrink
 
-func get_note_x(note) -> float:
+func get_note_x(note, alter=false) -> float:
 	if note >= note_min and note <= note_max:
-		return (note - note_min + 1) * note_width + note_width_shrink / 2
+		if not alter:
+			return (note - note_min + 1) * get_note_width(0, false) + note_width_shrink / 2
+		else:
+			var prev_octaves = int((note - note_min) / 12)
+			var key = get_key(note)
+			return get_note_width(0, false) + keys_octaves[0].width * prev_octaves + key.position.x
 	if note < note_min:
 		return note_width_shrink / 2
 	elif note > note_max:
-		return (size.x) - note_width + note_width_shrink / 2
+		return (size.x) - get_note_width(0,false) + note_width_shrink / 2
 	else:
 		# impossible
 		return -100
