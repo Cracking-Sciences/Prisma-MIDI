@@ -5,6 +5,9 @@ var ready_to_play = false
 var is_playing = false
 var judge_line_ratio = 0.2 # notes can be hit out of order when falling over this ratio
 var accept_line_ratio = 0.5
+var auto_follow_line_ratio = 0.0
+var auto_follow_line_velocity = 80
+
 var play_speed = 1.0
 var fall_speed = 1.0
 var auto_play = true
@@ -32,6 +35,8 @@ var judge_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLin
 var accept_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderAcceptLine
 @onready
 var ignore_free_note_check_button = $PianoRollContainer/HBoxContainerWidgets/CheckButtonIgnoreFreeNote
+@onready
+var auto_follow_option_button= $PianoRollContainer/HBoxContainerWidgets/OptionButtonAutoFollow
 
 
 @onready
@@ -209,16 +214,27 @@ func note_is_falling_all(is_falling = false):
 func trigger_from_note_child(_note_children, note_child):
 	if note_child == null:
 		return
+	
 	if not note_child.triggered:
-		if note_child.falling_ratio >= 1: # hit the end
-			if note_child.track_number in prisma_tracks:
+		if note_child.track_number in prisma_tracks: # prisma note
+			if note_child.falling_ratio >= 1: # hit the end
 				stopped_prisma_note_count += 1
-				# note_is_falling_all(false)
-			else:
-				if note_child.falling_ratio >= 1 + last_delta * fall_speed:
-					# so it will be triggered after prisma note if arrive at same time
-					note_on_off_note_child(true, note_child)
-					note_child.set_triggered()
+		else:
+			var use_auto_follow_velocity = false
+			var actual_falling_ratio = 1
+			if auto_follow_option_button.selected in [2,3]:
+				actual_falling_ratio = 1 - auto_follow_line_ratio
+			if auto_follow_option_button.selected in [1,3]:
+				use_auto_follow_velocity = true
+
+			if note_child.falling_ratio >= actual_falling_ratio:
+				if use_auto_follow_velocity:
+					note_child.velocity = auto_follow_line_velocity
+				note_on_off_note_child(true, note_child)
+				note_child.set_triggered()
+
+				note_child.length_ratio += 1 - note_child.falling_ratio
+				note_child.falling_ratio = 1
 
 
 func note_on_off_note_child(is_on, note_child):
@@ -263,6 +279,8 @@ func set_all():
 
 	accept_line_slider.custom_minimum_size.y = Utils.horizontal_widgets_width
 	change_accept_line(accept_line_slider.value)
+
+	change_auto_follow_line(auto_follow_line_ratio, auto_follow_line_velocity)
 
 	piano_roll_container.custom_minimum_size = get_viewport_rect().size
 	note_area.custom_minimum_size.x = get_viewport_rect().size.x
@@ -315,6 +333,7 @@ func change_piano_height(ratio):
 	change_judge_line(judge_line_ratio)
 	change_accept_line(accept_line_ratio)
 	set_referece_lines()
+	change_auto_follow_line(auto_follow_line_ratio, auto_follow_line_velocity)
 
 func change_piano_octaves(num):
 	piano.num_octaves = num
@@ -351,6 +370,8 @@ func change_judge_line(ratio):
 	note_area.get_node("JudgeLine").position.y = note_area.custom_minimum_size.y * (1 - judge_line_ratio)
 	if judge_line_ratio > accept_line_ratio:
 		accept_line_slider.value = judge_line_ratio
+	if auto_follow_line_ratio > judge_line_ratio:
+		change_auto_follow_line(judge_line_ratio, auto_follow_line_velocity)
 
 func change_accept_line(ratio):
 	accept_line_ratio = ratio
@@ -359,6 +380,16 @@ func change_accept_line(ratio):
 	note_area.get_node("AcceptLine").position.y = note_area.custom_minimum_size.y * (1 - accept_line_ratio)
 	if judge_line_ratio > accept_line_ratio:
 		judge_line_slider.value = accept_line_ratio
+
+func change_auto_follow_line(ratio, velocity):
+	auto_follow_line_ratio = ratio
+	auto_follow_line_velocity = velocity
+	note_area.get_node("AutoFollowLine").size.x = note_area.custom_minimum_size.x
+	note_area.get_node("AutoFollowLine").size.y = 1 + get_viewport_rect().size.y / 500
+	note_area.get_node("AutoFollowLine").position.y = note_area.custom_minimum_size.y * (1 - auto_follow_line_ratio)
+	note_area.get_node("AutoFollowLine").color.r = velocity / 128.0
+	note_area.get_node("AutoFollowLine").color.g = velocity / 128.0
+	note_area.get_node("AutoFollowLine").color.b = velocity / 128.0
 
 func change_fall_speed(value):
 	fall_speed = value
@@ -506,6 +537,7 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 			# normal action:
 			if not ignore_free_note_check_button.button_pressed:
 				keyless_note_on_off(from_key, is_on, note, velocity)
+			change_auto_follow_line(auto_follow_line_ratio, velocity)
 		else:
 			# prisma action:
 			var key = piano.get_key(chosen_note_child.note)
@@ -530,6 +562,8 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 						note_child.falling_ratio += skipped_ratio
 				# timeline skip
 				events_and_status.position += float(events_and_status.timebase) * skipped_ratio / fall_speed * events_and_status.seconds_to_timebase * play_speed
+			
+			change_auto_follow_line(1 - chosen_note_child.falling_ratio, velocity)
 			chosen_note_child.length_ratio += 1 - chosen_note_child.falling_ratio
 			chosen_note_child.falling_ratio = 1
 	else:

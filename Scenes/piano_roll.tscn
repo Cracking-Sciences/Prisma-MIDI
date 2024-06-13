@@ -52,6 +52,13 @@ offset_right = 100.0
 offset_bottom = 10.0
 color = Color(1, 0.75, 0.5, 0.196078)
 
+[node name="AutoFollowLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+layout_mode = 0
+offset_top = 153.0
+offset_right = 100.0
+offset_bottom = 163.0
+color = Color(1, 1, 1, 0.501961)
+
 [node name="AcceptLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
 layout_mode = 0
 offset_top = -30.0
@@ -221,24 +228,37 @@ text = "IgnoreFreeNote"
 [node name="CheckButtonIgnoreFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
 
+[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+text = "AutoFollow"
+
+[node name="OptionButtonAutoFollow" type="OptionButton" parent="PianoRollContainer/HBoxContainerWidgets"]
+layout_mode = 2
+item_count = 4
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Velocity"
+popup/item_1/id = 1
+popup/item_2/text = "Timing"
+popup/item_2/id = 2
+popup/item_3/text = "Both"
+popup/item_3/id = 3
+
 [node name="ButtonPopMore" type="Button" parent="PianoRollContainer/HBoxContainerWidgets"]
 layout_mode = 2
 text = "More Settings"
 
 [node name="PopupMenu" type="PopupPanel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore"]
+title = "More Settings"
 position = Vector2i(0, 300)
-size = Vector2i(100, 400)
+size = Vector2i(200, 400)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 196.0
+offset_bottom = 396.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer"]
 layout_mode = 2
@@ -289,6 +309,19 @@ text = "AlterNotes"
 
 [node name="CheckButtonAlterNotes" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "About"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 11
+text = "Made by csric@Cracking Sciences"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [connection signal="resized" from="." to="." method="on_resized"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerPlay/HSliderFallSpeed" to="." method="change_fall_speed"]

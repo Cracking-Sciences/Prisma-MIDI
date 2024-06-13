@@ -126,11 +126,11 @@ filters = PackedStringArray("*.mid")
 show_hidden_files = true
 
 [connection signal="midi_message" from="MidiIn" to="." method="on_midi_message"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonRefresh" to="." method="refresh"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonRefresh" to="." method="_on_button_refresh_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonRefresh" to="." method="refresh"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiIn" to="." method="on_select_midi_in"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="on_select_midi_out"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="_on_select_midi_out_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainerDevice/SelectMidiOut" to="." method="on_select_midi_out"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="on_send_some_notes"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonMuteAll" to="." method="on_key_off_all"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonOpenScore" to="." method="on_open_file_dialog"]
