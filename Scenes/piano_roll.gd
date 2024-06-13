@@ -80,6 +80,8 @@ func _ready():
 	set_all()
 	resize_timer.start()
 
+	change_auto_follow_option_button(0)
+
 var last_delta = 0
 func _process(delta):
 	if stopped_prisma_note_count > 0:
@@ -345,8 +347,8 @@ func change_piano_octaves(num):
 	set_referece_lines()
 
 func pop_more_settings():
-	popup_menu_more_settings.position = more_settings_button.position
 	popup_menu_more_settings.popup()
+	popup_menu_more_settings.position = more_settings_button.position
 
 func change_piano_black_width(ratio):
 	piano.black_width_ratio = ratio
@@ -390,6 +392,13 @@ func change_auto_follow_line(ratio, velocity):
 	note_area.get_node("AutoFollowLine").color.r = velocity / 128.0
 	note_area.get_node("AutoFollowLine").color.g = velocity / 128.0
 	note_area.get_node("AutoFollowLine").color.b = velocity / 128.0
+
+func change_auto_follow_option_button(index):
+	if index == 0:
+		note_area.get_node("AutoFollowLine").visible = false
+	else:
+		note_area.get_node("AutoFollowLine").visible = true
+		change_auto_follow_line(0.0, 100)
 
 func change_fall_speed(value):
 	fall_speed = value

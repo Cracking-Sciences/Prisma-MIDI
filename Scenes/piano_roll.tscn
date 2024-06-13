@@ -57,7 +57,7 @@ layout_mode = 0
 offset_top = 153.0
 offset_right = 100.0
 offset_bottom = 163.0
-color = Color(1, 1, 1, 0.501961)
+color = Color(1, 1, 1, 0.0980392)
 
 [node name="AcceptLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
 layout_mode = 0
@@ -333,6 +333,7 @@ autowrap_mode = 0
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderMiddleOctave" to="." method="change_piano_middle_octave"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLine" to="." method="change_judge_line"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/HSliderAcceptLine" to="." method="change_accept_line"]
+[connection signal="item_selected" from="PianoRollContainer/HBoxContainerWidgets/OptionButtonAutoFollow" to="." method="change_auto_follow_option_button"]
 [connection signal="pressed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore" to="." method="pop_more_settings"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderHeight" to="." method="change_piano_height"]
 [connection signal="value_changed" from="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/HSliderBlackWidth" to="." method="change_piano_black_width"]
