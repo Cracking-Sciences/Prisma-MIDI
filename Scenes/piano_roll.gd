@@ -158,11 +158,19 @@ func note_off_all_note_children():
 func clear_fell_below_note_child(note_children, note_child):
 	if note_child == null:
 		return
+	# auto follow release
+	if auto_follow_option_button.selected in [2,3]:
+		if note_child.track_number not in prisma_tracks:
+			if note_child.falling_ratio >= note_child.length_ratio + 1 - auto_follow_line_ratio \
+				and not note_child.released:
+				note_on_off_note_child(false, note_child)
+				note_child.set_released()
+
 	if note_child.fell_below:
 		if note_child.track_number not in prisma_tracks:
 			if not note_child.released:
 				note_on_off_note_child(false, note_child)
-				note_child.released = true
+				note_child.set_released()
 		if note_child.released:
 			note_children.erase(note_child)
 			note_area.remove_child(note_child)
