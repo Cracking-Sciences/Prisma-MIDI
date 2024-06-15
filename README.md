@@ -5,12 +5,12 @@
 If you want to play a piano score but don't know how to or don't want to practice, Prisma MIDI is what you are looking for.
 
 
-Prisma MIDI maps a wrong keystroke to the nearest right key position, given by the score midi file. With a midi input device and a midi audio source, player can focus on the speed and velocity expression, without paying attention to key-locating and fingering.
+Prisma MIDI maps a wrong keystroke to the nearest right key position, given by a score midi file. With a midi input device and a midi audio source, player can focus on the speed and velocity expression, without paying attention to key-locating and fingering.
 
 ## Details
 ### MIDI Input
 Prisma MIDI get midi signals from a MIDI source.   
-If you have no such a device, `ASDFGHJKL;` on computer keyboard can be used as input, those keys are mapped linearly across the keyboard. However, you will lose velocity expression.
+If you have no such a device, `ASDFGHJKL;` on a computer keyboard can be used as input. Those keys are mapped linearly to the piano keyboard. However, you will lose velocity expression. It's highly recommended to get a MIDI controller! Many electronic keyboards are midi compatible too.
 
 ### MIDI Output
 Prisma MIDI will send the final processed MIDI signals to an output. On windows, the default output is Microsoft GS Wavetable Synth, which is laggy and crappy, don't use it unless no other choice.
@@ -25,7 +25,7 @@ We call notes from a manual-prisma track "prisma notes".
 
 If an un-triggered prisma note reaches the end (top of the piano keys), the whole score's progress will pause. 
 
-You can speed down the playing by utilizing this feature.
+You can speed down the playing by utilizing the pause feature.
 
 
 ### TolerateLine
@@ -58,11 +58,11 @@ You can enable velocity and timing auto follow to get a more natural playing if 
 
 
 ### Alter Notes
-Some people prefer the see wide white notes and thin black notes, enable it.
+Some people prefer to see wide white notes and thin black notes. Enable it.
 
 
 ## Windows Tips
-Currently it is hard to emulate Prisma MIDI as a midi output device on windows (a shocking truth. I cannot find a free open source impl). Therefore, you cannot directly set Prisma MIDI as your audio source's midi input. 
+Currently it is hard to emulate Prisma MIDI as a virtual midi output device on windows (a shocking truth. I cannot find a free open source impl). Therefore, you cannot directly set Prisma MIDI as your audio source's midi input. 
 
 Please install [LoopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html). Set Prisma MIDI's MIDI Output to a LoopMIDI input port.
 
