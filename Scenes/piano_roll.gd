@@ -242,6 +242,7 @@ func trigger_from_note_child(_note_children, note_child):
 					note_child.velocity = auto_follow_line_velocity
 				note_on_off_note_child(true, note_child)
 				note_child.set_triggered()
+				note_child.color_mul(0.5, 0.5)
 
 				note_child.length_ratio += 1 - note_child.falling_ratio
 				note_child.falling_ratio = 1
@@ -522,7 +523,7 @@ func prisma_links_reset():
 	for note in prisma_links:
 		prisma_links_remove(note)
 
-func manual_note_on_off(is_on, note, velocity, from_key):
+func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true):
 	# find a neareast prisma note
 	if is_on:
 		var min_distance = 10000.0 # ratio
@@ -558,7 +559,10 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 		else:
 			# prisma action:
 			var key = piano.get_key(chosen_note_child.note)
-			keyless_note_on_off(key, is_on, chosen_note_child.note, velocity, chosen_note_child.modulate)
+			var actual_velocity = velocity
+			if not manual_velocity:
+				actual_velocity = chosen_note_child.velocity
+			keyless_note_on_off(key, is_on, chosen_note_child.note, actual_velocity, chosen_note_child.modulate)
 			chosen_note_child.set_triggered()
 			prisma_links_add(note, chosen_note_child)
 
@@ -580,7 +584,7 @@ func manual_note_on_off(is_on, note, velocity, from_key):
 				# timeline skip
 				events_and_status.position += float(events_and_status.timebase) * skipped_ratio / fall_speed * events_and_status.seconds_to_timebase * play_speed
 			
-			change_auto_follow_line(1 - chosen_note_child.falling_ratio, velocity)
+			change_auto_follow_line(1 - chosen_note_child.falling_ratio, actual_velocity)
 			chosen_note_child.length_ratio += 1 - chosen_note_child.falling_ratio
 			chosen_note_child.falling_ratio = 1
 	else:

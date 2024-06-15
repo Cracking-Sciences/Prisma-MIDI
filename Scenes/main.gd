@@ -49,3 +49,28 @@ func on_generate_map():
 		return
 	piano_roll.generate_map(midi_options.smf_result.data, midi_options.get_selected_tracks_number())
 	piano_roll.get_prisma_tracks(midi_options.get_prisma_tracks_number())
+
+var keyboard_position_map = {
+	KEY_A: 1/11.0,
+	KEY_S: 2/11.0,
+	KEY_D: 3/11.0,
+	KEY_F: 4/11.0,
+	KEY_G: 5/11.0,
+	KEY_H: 6/11.0,
+	KEY_J: 7/11.0,
+	KEY_K: 8/11.0,
+	KEY_L: 9/11.0,
+	KEY_SEMICOLON: 10/11.0
+}
+func _input(event):
+	# keyboard input. unrecommended way as it doesn't express velocity emotion.
+	# but I added this feature anyway... make it more like a game.
+	if event is InputEventKey and not event.echo:
+		if event.keycode in keyboard_position_map.keys():
+			# linear map
+			var note = int((piano.note_max - piano.note_min) * keyboard_position_map[event.keycode]) + piano.note_min
+			var key = piano.get_key(note)
+			var is_on = true
+			if not event.pressed:
+				is_on = false
+			piano_roll.manual_note_on_off(is_on, note, 100, key, false)

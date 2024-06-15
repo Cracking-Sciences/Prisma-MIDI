@@ -317,8 +317,9 @@ text = "About"
 [node name="RichTextLabel" type="RichTextLabel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
 modulate = Color(1, 0, 0, 1)
 layout_mode = 2
-theme_override_font_sizes/normal_font_size = 11
-text = "Made by csric@Cracking Sciences"
+theme_override_font_sizes/normal_font_size = 12
+text = "Design & Program by 
+csric@Cracking Sciences"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
