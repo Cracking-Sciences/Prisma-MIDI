@@ -82,22 +82,32 @@ No linux build at the moment.
 If you are not into the music / audio industry, you probably don't have any audio source installed. Here are some free piano source for you to begin with:
 
 
-[LABS Soft Piano](https://labs.spitfireaudio.com/soft-piano)
+- [LABS Soft Piano](https://labs.spitfireaudio.com/soft-piano)
 
-[Studiologic Numa Player](https://www.studiologic-music.com/products/numaplayer/)
+- [Studiologic Numa Player](https://www.studiologic-music.com/products/numaplayer/)
 
-[99Sounds Upright Piano](https://99sounds.sellfy.store/p/8vh6xs/)
+- [99Sounds Upright Piano](https://99sounds.sellfy.store/p/8vh6xs/)
 
-[Audiolatry Grand Piano](https://audiolatry.com/products/grand-piano)
+- [Audiolatry Grand Piano](https://audiolatry.com/products/grand-piano)
 
 
 You should install the stand-alone version. Plugin version (VST, AU, etc) can only be run within a [DAW](https://en.wikipedia.org/wiki/Digital_audio_workstation).
 
+The things I recommend are not related to my personal interests.
+
+## Where to get MIDI scores
+
+MIDI files records midi signals. MIDI files are the most common music socres for computer. 
+You can get midi files from
+
+- [midishow](https://www.midishow.com/)
+- [musescore](https://musescore.com/) (not all free)
+
+There are many other ways to get a midi file for your favorate song.
 
 
 
-
-
+The things I recommend are not related to my personal interests.
 
 ## Credits
 Design and Program by [csric](https://csric.github.io/blog/)@[Cracking Sciences](https://cracking-sciences.github.io/)
@@ -105,3 +115,5 @@ Powered by [Godot Engine](https://godotengine.org/)
 This project uses the following open source libraries:
 - [rtmidi](https://github.com/thestk/rtmidi)
 - [godot-rtmidi](https://github.com/NullMember/godot-rtmidi)
+
+
