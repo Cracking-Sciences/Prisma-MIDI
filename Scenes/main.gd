@@ -35,7 +35,16 @@ func on_midi_in_message(_deltatime, message):
 		Utils.NoteOff:
 			is_on = false
 		_:
-			return
+			if message[0] >= 176 and message[0] <= 191: # cc message from channel 1~16
+				match message[1]:
+					Utils.SustainPedal:
+						# TODO: internal sustain pedal handle, since many audio resource didn't handle that
+						midi_options.send_midi_message(message, midi_options.midi_out)
+						# print(message)
+						return
+					_:
+						# print(message)
+						return
 	var key = piano.get_key(message[1])
 	if key == null:
 		# trigger without the key

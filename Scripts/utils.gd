@@ -5,7 +5,7 @@ const NoteOn = 144
 const NoteOff = 128
 const ProgramChange = 192
 const ControlChange = 176
-
+const SustainPedal = 64 # TOKAMAK's favorate CC64
 
 # ui
 const horizontal_widgets_width = 20
