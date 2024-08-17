@@ -44,6 +44,7 @@ func on_midi_in_message(_deltatime, message):
 						return
 					_:
 						# print(message)
+						midi_options.send_midi_message(message, midi_options.midi_out)
 						return
 	var key = piano.get_key(message[1])
 	if key == null:
