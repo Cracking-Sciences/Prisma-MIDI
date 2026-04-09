@@ -523,7 +523,7 @@ func prisma_links_reset():
 	for note in prisma_links:
 		prisma_links_remove(note)
 
-func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true):
+func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true, channel = 0):
 	# find a neareast prisma note
 	if is_on:
 		var min_distance = 10000.0 # ratio
@@ -554,7 +554,7 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true)
 		if chosen_note_child == null:
 			# normal action:
 			if not ignore_free_note_check_button.button_pressed:
-				keyless_note_on_off(from_key, is_on, note, velocity)
+				keyless_note_on_off(from_key, is_on, note, velocity, null, channel)
 			change_auto_follow_line(auto_follow_line_ratio, velocity)
 		else:
 			# prisma action:
@@ -562,7 +562,7 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true)
 			var actual_velocity = velocity
 			if not manual_velocity:
 				actual_velocity = chosen_note_child.velocity
-			keyless_note_on_off(key, is_on, chosen_note_child.note, actual_velocity, chosen_note_child.modulate)
+			keyless_note_on_off(key, is_on, chosen_note_child.note, actual_velocity, chosen_note_child.modulate, channel)
 			chosen_note_child.set_triggered()
 			prisma_links_add(note, chosen_note_child)
 
@@ -589,21 +589,21 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true)
 			chosen_note_child.falling_ratio = 1
 	else:
 		var key = piano.get_key(note)
-		keyless_note_on_off(key, is_on, note, velocity) # normal key should deactivate too
+		keyless_note_on_off(key, is_on, note, velocity, null, channel) # normal key should deactivate too
 		if note in prisma_links:
 			for note_child_record in prisma_links[note]:
 				var note_child = note_child_record.note_child
 				if note_child != null:
 					key = piano.get_key(note_child.note)
-					keyless_note_on_off(key, is_on, note_child.note, velocity)
+					keyless_note_on_off(key, is_on, note_child.note, velocity, null, channel)
 					note_child.set_released()
 			prisma_links_remove(note)
 
-func keyless_note_on_off(key, is_on, note, velocity, color = null):
+func keyless_note_on_off(key, is_on, note, velocity, color = null, channel = 0):
 	if key != null:
 		if is_on:
 			key.activate(velocity, color)
 		else:
 			key.deactivate(velocity)
 	if get_parent() != null:
-		get_parent().note_on_off(is_on, note, velocity)
+		get_parent().note_on_off(is_on, note, velocity, channel)

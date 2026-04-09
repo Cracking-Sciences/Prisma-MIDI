@@ -14,11 +14,9 @@ func _ready():
 	midi_options.generate_map.connect(self.on_generate_map)
 	piano_roll.parent = self
 
-func note_on_off(is_on, note, velocity):
-	if is_on:
-		midi_options.send_midi_message([Utils.NoteOn, note, velocity], midi_options.midi_out)
-	else:
-		midi_options.send_midi_message([Utils.NoteOff, note, velocity], midi_options.midi_out)
+func note_on_off(is_on, note, velocity, channel = 0):
+	var status = (0x90 if is_on else 0x80) | (channel & 0x0F)
+	midi_options.send_midi_message([status, note, velocity], midi_options.midi_out)
 
 func _notification(what):
 	if what == NOTIFICATION_RESIZED:
@@ -26,33 +24,31 @@ func _notification(what):
 			piano_roll.custom_minimum_size = get_viewport_rect().size
 
 func on_midi_in_message(_deltatime, message):
-	if len(message) != 3:
+	if len(message) == 0:
 		return
-	var is_on
-	match message[0]:
-		Utils.NoteOn:
-			is_on = true
-		Utils.NoteOff:
+		
+	var status = message[0]
+	var status_type = status & 0xF0
+	var channel = status & 0x0F
+	
+	if status_type == 0x90 or status_type == 0x80:
+		var is_on = true
+		if status_type == 0x80 or (status_type == 0x90 and len(message) > 2 and message[2] == 0):
 			is_on = false
-		_:
-			if message[0] >= 176 and message[0] <= 191: # cc message from channel 1~16
-				match message[1]:
-					Utils.SustainPedal:
-						# TODO: internal sustain pedal handle, since many audio resource didn't handle that
-						midi_options.send_midi_message(message, midi_options.midi_out)
-						# print(message)
-						return
-					_:
-						# print(message)
-						midi_options.send_midi_message(message, midi_options.midi_out)
-						return
-	var key = piano.get_key(message[1])
-	if key == null:
-		# trigger without the key
-		note_on_off(is_on, message[1], message[2])
+			
+		var note = message[1] if len(message) > 1 else 0
+		var vel = message[2] if len(message) > 2 else 0
+		
+		var key = piano.get_key(note)
+		if key == null:
+			# trigger without the key
+			note_on_off(is_on, note, vel, channel)
+		else:
+			# trigger from the key
+			piano_roll.manual_note_on_off(is_on, note, vel, key, true, channel)
 	else:
-		# trigger from the key
-		piano_roll.manual_note_on_off(is_on, message[1], message[2], key)
+		# Pass through all other messages unaltered
+		midi_options.send_midi_message(message, midi_options.midi_out)
 
 func on_generate_map():
 	if midi_options.smf_result == null:
