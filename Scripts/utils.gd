@@ -134,7 +134,7 @@ class EventsAndStatus:
 						return ""
 		return ""
 
-func get_events_and_status(smf_data:SMF.SMFData, selected_tracks)->EventsAndStatus:
+func get_events_and_status(smf_data:SMF.SMFData, selected_tracks, avoid_stacked_notes: bool = true)->EventsAndStatus:
 	# Mix multiple tracks to single track
 	var tracks:Array[Dictionary] = []
 	for track in smf_data.tracks:
@@ -165,11 +165,85 @@ func get_events_and_status(smf_data:SMF.SMFData, selected_tracks)->EventsAndStat
 				next_time = e_time
 		time = next_time
 
-	events_and_status.last_position = events_and_status.events[-1].midi_event_chunk.time
+	if len(events_and_status.events) > 0:
+		if avoid_stacked_notes:
+			filter_stacked_notes(events_and_status.events, int(smf_data.timebase / 20))
+		if len(events_and_status.events) > 0:
+			events_and_status.last_position = events_and_status.events[-1].midi_event_chunk.time
+		else:
+			events_and_status.last_position = 0
+	else:
+		events_and_status.last_position = 0
+		
 	events_and_status.event_pointer = 0
 	events_and_status.timebase = smf_data.timebase
 	events_and_status.set_tempo(80)
 	return events_and_status
+
+static func filter_stacked_notes(events: Array, threshold: int):
+	var active_notes = {}
+	var pairs = {}
+	
+	for i in range(len(events)):
+		var e_chunk = events[i]
+		var e = e_chunk.midi_event_chunk
+		if e.event.type == SMF.MIDIEventType.note_on and e.event.velocity > 0:
+			var note = e.event.note
+			if not note in active_notes:
+				active_notes[note] = []
+			active_notes[note].append(i)
+		elif e.event.type == SMF.MIDIEventType.note_off or (e.event.type == SMF.MIDIEventType.note_on and e.event.velocity == 0):
+			var note = e.event.note
+			if note in active_notes and len(active_notes[note]) > 0:
+				var on_idx = active_notes[note].pop_front()
+				if not note in pairs:
+					pairs[note] = []
+				pairs[note].append({
+					"on_idx": on_idx,
+					"off_idx": i,
+					"on_time": events[on_idx].midi_event_chunk.time,
+					"off_time": e.time
+				})
+	
+	var indices_to_remove_dict = {}
+	
+	for note in pairs:
+		var note_pairs = pairs[note]
+		var current_cluster = []
+		for p in note_pairs:
+			if len(current_cluster) == 0:
+				current_cluster.append(p)
+			else:
+				if p.on_time - current_cluster[0].on_time <= threshold:
+					current_cluster.append(p)
+				else:
+					_resolve_cluster(current_cluster, indices_to_remove_dict)
+					current_cluster.clear()
+					current_cluster.append(p)
+		
+		_resolve_cluster(current_cluster, indices_to_remove_dict)
+	
+	var indices_to_remove = indices_to_remove_dict.keys()
+	indices_to_remove.sort()
+	indices_to_remove.reverse()
+	for idx in indices_to_remove:
+		events.remove_at(idx)
+
+static func _resolve_cluster(cluster: Array, indices_to_remove_dict: Dictionary):
+	if len(cluster) <= 1:
+		return
+	var max_len = -1
+	var longest_p = null
+	for p in cluster:
+		var length = p.off_time - p.on_time
+		if length > max_len:
+			max_len = length
+			longest_p = p
+	
+	for p in cluster:
+		if p != longest_p:
+			indices_to_remove_dict[p.on_idx] = true
+			indices_to_remove_dict[p.off_idx] = true
 
 
 func is_need_map_info(event: SMF.MIDIEventChunk)->bool:

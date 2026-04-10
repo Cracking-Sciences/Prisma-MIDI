@@ -25,6 +25,8 @@ var piano = $PianoRollContainer/Piano
 
 var parent = null
 
+var avoid_stacked_notes_check_button: CheckButton
+
 @onready
 var octaves_slider= $PianoRollContainer/HBoxContainerWidgets/HSliderOctaves
 @onready
@@ -80,7 +82,17 @@ func _ready():
 	set_all()
 	resize_timer.start()
 
+	avoid_stacked_notes_check_button = CheckButton.new()
+	avoid_stacked_notes_check_button.text = "Avoid Stacked Notes"
+	avoid_stacked_notes_check_button.button_pressed = true
+	$PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer.add_child(avoid_stacked_notes_check_button)
+	avoid_stacked_notes_check_button.toggled.connect(self._on_avoid_stacked_notes_toggled)
+
 	change_auto_follow_option_button(0)
+
+func _on_avoid_stacked_notes_toggled(_toggled_on):
+	if parent != null and parent.has_method("on_generate_map"):
+		parent.on_generate_map()
 
 var last_delta = 0
 func _process(delta):
@@ -443,7 +455,7 @@ func clear_map():
 
 func generate_map(smf_data:SMF.SMFData, selected_tracks):
 	clear_all_note_children()
-	events_and_status = Utils.get_events_and_status(smf_data, selected_tracks)
+	events_and_status = Utils.get_events_and_status(smf_data, selected_tracks, avoid_stacked_notes_check_button.button_pressed)
 	if events_and_status==null:
 		return
 	ready_to_play = true
