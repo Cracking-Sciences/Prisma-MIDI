@@ -231,3 +231,11 @@ signal generate_map
 
 func on_button_generate_map():
 	generate_map.emit()
+
+
+
+func _on_select_midi_out_pressed():
+	refresh()
+
+func _on_select_midi_in_pressed():
+	refresh()

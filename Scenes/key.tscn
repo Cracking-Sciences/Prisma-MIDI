@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxbndorm22oqk"]
+[gd_scene format=3 uid="uid://cxbndorm22oqk"]
 
-[ext_resource type="Script" path="res://Scenes/key.gd" id="1_o6whw"]
+[ext_resource type="Script" uid="uid://5wqg2hq0sder" path="res://Scenes/key.gd" id="1_o6whw"]
 [ext_resource type="Texture2D" uid="uid://cprqdm0cdtljp" path="res://assets/2d_lights_and_shadows_neutral_point_light.webp" id="2_3s2t6"]
 
-[node name="SingleKey" type="ColorRect"]
+[node name="SingleKey" type="ColorRect" unique_id=978159363]
 offset_right = 4.288
 offset_bottom = 58.648
 mouse_default_cursor_shape = 2
 color = Color(0.466181, 0.466181, 0.466181, 1)
 script = ExtResource("1_o6whw")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=959684893]
 position = Vector2(2, 0)
-energy = 0.7
+energy = 1.02
 range_z_min = -2
 range_z_max = 3
 shadow_item_cull_mask = 0
