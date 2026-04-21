@@ -18,7 +18,7 @@ var note_width_shrink = 0.0
 var note_min = 0
 var note_max = 0
 
-var referece_xs = []
+var referece_xs = [] # x positions reference
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

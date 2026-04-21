@@ -553,7 +553,8 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true,
 				if vertical_dist_ratio <= judge_line_ratio:
 					# beneath the judge line
 					var horizontal_dist_ratio = abs(piano.get_note_x(note, false) - note_child.position.x) / piano.size.x
-					weighted_distance = horizontal_dist_ratio + vertical_dist_ratio
+					# TODO Change the x-y ratio for easier hitting
+					weighted_distance = horizontal_dist_ratio + vertical_dist_ratio * 5
 					above_judge_line = false
 				elif vertical_dist_ratio <= accept_line_ratio:
 					# above the judge line, but under the accept line

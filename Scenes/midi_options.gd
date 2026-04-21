@@ -10,6 +10,7 @@ var message_out: PackedByteArray
 var message_in: PackedByteArray
 var smf_result: SMF.SMFParseResult = null
 
+var disabled_midi_name = "*Disabled"
 @onready
 var midi_out = $MidiOut
 @onready
@@ -60,13 +61,14 @@ func refresh():
 	select_midi_out.text = "MIDI Output"
 	var num_ports = MidiOut.get_port_count()
 	var have_selected = false
+	select_midi_out.add_item(disabled_midi_name)
 	for i in range(num_ports):
 		var port_name = MidiOut.get_port_name(i)
 		select_midi_out.add_item(port_name)
 		if port_name == selected_midi_out_name:
-			select_midi_out.selected = i
+			select_midi_out.selected = i + 1
 			have_selected = true
-	if not have_selected and num_ports > 0:
+	if not have_selected:
 		select_midi_out.selected = 0
 		on_select_midi_out(0)
 # midi in
@@ -74,25 +76,32 @@ func refresh():
 	select_midi_in.text = "MIDI Input"
 	num_ports = MidiIn.get_port_count()
 	have_selected = false
+	# disable midi in if no port
+	select_midi_in.add_item(disabled_midi_name)
 	for i in range(num_ports):
 		var port_name = MidiIn.get_port_name(i)
 		select_midi_in.add_item(port_name)
 		if port_name == selected_midi_in_name:
-			select_midi_in.selected = i
+			select_midi_in.selected = i + 1
 			have_selected = true
-	if not have_selected and num_ports > 0:
+	if not have_selected:
 		select_midi_in.selected = 0
 		on_select_midi_in(0)
 
 func on_select_midi_out(index):
 	selected_midi_out_name = select_midi_out.get_item_text(index)
 	midi_out.close_port()
-	midi_out.open_port(index)
+	if index == 0:
+		return
+	# index 0 is special for "disabled"
+	midi_out.open_port(index - 1)
 
 func on_select_midi_in(index):
 	selected_midi_in_name = select_midi_in.get_item_text(index)
 	midi_in.close_port()
-	midi_in.open_port(index)
+	if index == 0:
+		return
+	midi_in.open_port(index - 1)
 	midi_in.ignore_types(false, false, false)
 	if midi_in.midi_message.is_connected(on_midi_message):
 		midi_in.midi_message.disconnect(on_midi_message)

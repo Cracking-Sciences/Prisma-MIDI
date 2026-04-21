@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://vjed1pel4ili"]
+[gd_scene format=3 uid="uid://vjed1pel4ili"]
 
-[ext_resource type="Script" path="res://Scenes/piano_roll.gd" id="1_7ujpr"]
-[ext_resource type="Script" path="res://Scenes/piano.gd" id="1_jqdrl"]
-[ext_resource type="Script" path="res://Scenes/note.gd" id="2_2kehm"]
+[ext_resource type="Script" uid="uid://d14junkj2nf6e" path="res://Scenes/piano_roll.gd" id="1_7ujpr"]
+[ext_resource type="Script" uid="uid://nu4a3wt5bia7" path="res://Scenes/piano.gd" id="1_jqdrl"]
+[ext_resource type="Script" uid="uid://1i4cok5xc6re" path="res://Scenes/note.gd" id="2_2kehm"]
 [ext_resource type="Theme" uid="uid://r3750kpxv4u6" path="res://note_panel_theme.tres" id="2_kmldm"]
 
-[node name="PianoRoll" type="Control"]
+[node name="PianoRoll" type="Control" unique_id=1942848616]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7ujpr")
 
-[node name="ColorRectMask" type="ColorRect" parent="."]
+[node name="ColorRectMask" type="ColorRect" parent="." unique_id=58851624]
 z_index = 5
 layout_mode = 0
 offset_top = 563.0
@@ -23,7 +23,7 @@ offset_bottom = 710.0
 mouse_filter = 2
 color = Color(0.266575, 0.266575, 0.266575, 1)
 
-[node name="PianoRollContainer" type="VBoxContainer" parent="."]
+[node name="PianoRollContainer" type="VBoxContainer" parent="." unique_id=79431142]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,11 +32,11 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
-[node name="NoteArea" type="Control" parent="PianoRollContainer"]
+[node name="NoteArea" type="Control" parent="PianoRollContainer" unique_id=365570297]
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 
-[node name="note" type="Panel" parent="PianoRollContainer/NoteArea"]
+[node name="note" type="Panel" parent="PianoRollContainer/NoteArea" unique_id=589708920]
 z_index = -2
 layout_mode = 0
 offset_left = -115.0
@@ -46,40 +46,40 @@ offset_bottom = 184.0
 theme = ExtResource("2_kmldm")
 script = ExtResource("2_2kehm")
 
-[node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+[node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2120442648]
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 10.0
 color = Color(1, 0.75, 0.5, 0.196078)
 
-[node name="AutoFollowLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+[node name="AutoFollowLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=775947176]
 layout_mode = 0
 offset_top = 153.0
 offset_right = 100.0
 offset_bottom = 163.0
 color = Color(1, 1, 1, 0.0980392)
 
-[node name="AcceptLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+[node name="AcceptLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=359057910]
 layout_mode = 0
 offset_top = -30.0
 offset_right = 100.0
 offset_bottom = -20.0
 color = Color(1, 0.5, 0.5, 0.196078)
 
-[node name="ReferenceLine" type="ColorRect" parent="PianoRollContainer/NoteArea"]
+[node name="ReferenceLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2125801276]
 layout_mode = 0
 offset_left = -163.0
 offset_right = -152.0
 offset_bottom = 376.0
 color = Color(1, 1, 1, 0.0901961)
 
-[node name="Piano" type="Control" parent="PianoRollContainer"]
+[node name="Piano" type="Control" parent="PianoRollContainer" unique_id=1657616626]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("1_jqdrl")
 
-[node name="ColorRectPianoMask" type="ColorRect" parent="PianoRollContainer/Piano"]
+[node name="ColorRectPianoMask" type="ColorRect" parent="PianoRollContainer/Piano" unique_id=148199244]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -89,22 +89,22 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.266667, 0.266667, 0.266667, 1)
 
-[node name="HBoxContainerPlay" type="HBoxContainer" parent="PianoRollContainer"]
+[node name="HBoxContainerPlay" type="HBoxContainer" parent="PianoRollContainer" unique_id=1273552927]
 z_index = 10
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerPlay" unique_id=379745505]
 layout_mode = 2
 text = "FallSpeed"
 
-[node name="LabelFallSpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="LabelFallSpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay" unique_id=452230857]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 text = "1.0"
 horizontal_alignment = 1
 clip_text = true
 
-[node name="HSliderFallSpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="HSliderFallSpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay" unique_id=563902100]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -113,19 +113,18 @@ max_value = 3.0
 step = 0.1
 value = 1.0
 
-[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerPlay" unique_id=1471723947]
 layout_mode = 2
-text = "PlaySpeed
-"
+text = "PlaySpeed"
 
-[node name="LabelPlaySpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="LabelPlaySpeed" type="Label" parent="PianoRollContainer/HBoxContainerPlay" unique_id=1046877540]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 text = "1.0"
 horizontal_alignment = 1
 clip_text = true
 
-[node name="HSliderPlaySpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="HSliderPlaySpeed" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay" unique_id=229914546]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -134,40 +133,40 @@ max_value = 3.0
 step = 0.1
 value = 1.0
 
-[node name="LabelBPM" type="Label" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="LabelBPM" type="Label" parent="PianoRollContainer/HBoxContainerPlay" unique_id=1481312824]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "BPM: 80"
 clip_text = true
 
-[node name="ButtonPlay" type="Button" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="ButtonPlay" type="Button" parent="PianoRollContainer/HBoxContainerPlay" unique_id=2132241855]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 toggle_mode = true
 text = "Play"
 
-[node name="HSliderProgress" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay"]
+[node name="HSliderProgress" type="HSlider" parent="PianoRollContainer/HBoxContainerPlay" unique_id=1630848304]
 layout_mode = 2
 size_flags_vertical = 1
 step = 0.1
 
-[node name="HBoxContainerWidgets" type="HBoxContainer" parent="PianoRollContainer"]
+[node name="HBoxContainerWidgets" type="HBoxContainer" parent="PianoRollContainer" unique_id=1831859893]
 z_index = 10
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=130831618]
 layout_mode = 2
 text = "Octaves"
 
-[node name="LabelOctaves" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="LabelOctaves" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=2067485629]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 text = "5"
 horizontal_alignment = 1
 clip_text = true
 
-[node name="HSliderOctaves" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderOctaves" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1982780813]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -175,17 +174,17 @@ min_value = 1.0
 max_value = 11.0
 value = 7.0
 
-[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1904112061]
 layout_mode = 2
 text = "Oct+"
 
-[node name="LabelOct" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="LabelOct" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1570133500]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
-[node name="HSliderMiddleOctave" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderMiddleOctave" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=948348102]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -193,12 +192,12 @@ min_value = -4.0
 max_value = 4.0
 value = 3.0
 
-[node name="Label6" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label6" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1927766909]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0.5, 0.498039)
 text = "TolerateLine"
 
-[node name="HSliderJudgeLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderJudgeLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1820114708]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -207,35 +206,35 @@ max_value = 1.0
 step = 0.02
 value = 0.16
 
-[node name="Label7" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label7" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=851179350]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.5, 0.5, 0.498039)
 text = "AcceptLine"
 
-[node name="HSliderAcceptLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="HSliderAcceptLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=352264488]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 0.02
 max_value = 1.0
 step = 0.02
-value = 0.3
+value = 0.30000000000000004
 
-[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=971858308]
 layout_mode = 2
 text = "IgnoreFreeNote"
 
-[node name="CheckButtonIgnoreFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="CheckButtonIgnoreFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=697860902]
 layout_mode = 2
 
-[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1542859965]
 layout_mode = 2
 text = "AutoFollow"
 
-[node name="OptionButtonAutoFollow" type="OptionButton" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="OptionButtonAutoFollow" type="OptionButton" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1519576258]
 layout_mode = 2
-item_count = 4
 selected = 0
+item_count = 4
 popup/item_0/text = "None"
 popup/item_0/id = 0
 popup/item_1/text = "Velocity"
@@ -245,42 +244,42 @@ popup/item_2/id = 2
 popup/item_3/text = "Both"
 popup/item_3/id = 3
 
-[node name="ButtonPopMore" type="Button" parent="PianoRollContainer/HBoxContainerWidgets"]
+[node name="ButtonPopMore" type="Button" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1551306562]
 layout_mode = 2
 text = "More Settings"
 
-[node name="PopupMenu" type="PopupPanel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore"]
+[node name="PopupMenu" type="PopupPanel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore" unique_id=1270037828]
 title = "More Settings"
 position = Vector2i(0, 300)
 size = Vector2i(200, 400)
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu" unique_id=591659596]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 196.0
 offset_bottom = 396.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer" unique_id=1489586635]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=1589556753]
 layout_mode = 2
 text = "PianoHeight"
 
-[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="HSliderHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=331654474]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
 min_value = 0.01
 max_value = 0.4
 step = 0.01
-value = 0.1
+value = 0.09999999999999999
 
-[node name="Label5" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="Label5" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=449448937]
 layout_mode = 2
 text = "BlackWidth"
 
-[node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="HSliderBlackWidth" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=342595553]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -289,12 +288,12 @@ max_value = 0.9
 step = 0.05
 value = 0.65
 
-[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=1543546670]
 layout_mode = 2
 text = "BlackHeight
 "
 
-[node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="HSliderBlackHeight" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=2002572908]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -303,18 +302,18 @@ max_value = 1.0
 step = 0.05
 value = 0.7
 
-[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=1719375385]
 layout_mode = 2
 text = "AlterNotes"
 
-[node name="CheckButtonAlterNotes" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="CheckButtonAlterNotes" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=1639141976]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=1547358289]
 layout_mode = 2
 text = "About"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer" unique_id=537518268]
 modulate = Color(1, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 12
