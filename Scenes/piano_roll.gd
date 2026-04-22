@@ -37,7 +37,7 @@ var judge_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderJudgeLin
 @onready
 var accept_line_slider = $PianoRollContainer/HBoxContainerWidgets/HSliderAcceptLine
 @onready
-var ignore_free_note_check_button = $PianoRollContainer/HBoxContainerWidgets/CheckButtonIgnoreFreeNote
+var free_note_check_button = $PianoRollContainer/HBoxContainerWidgets/CheckButtonFreeNote
 @onready
 var auto_follow_option_button= $PianoRollContainer/HBoxContainerWidgets/OptionButtonAutoFollow
 
@@ -561,7 +561,7 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true,
 					chosen_note_child = note_child
 		if chosen_note_child == null:
 			# normal action:
-			if not ignore_free_note_check_button.button_pressed:
+			if free_note_check_button.button_pressed:
 				keyless_note_on_off(from_key, is_on, note, velocity, null, channel)
 			change_auto_follow_line(auto_follow_line_ratio, velocity)
 		else:

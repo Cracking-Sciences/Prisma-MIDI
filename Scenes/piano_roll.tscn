@@ -195,7 +195,7 @@ value = 3.0
 [node name="Label6" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1927766909]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.75, 0.5, 0.498039)
-text = "TolerateLine"
+text = "Tolerate"
 
 [node name="HSliderJudgeLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1820114708]
 custom_minimum_size = Vector2(60, 0)
@@ -209,7 +209,7 @@ value = 0.16
 [node name="Label7" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=851179350]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.5, 0.5, 0.498039)
-text = "AcceptLine"
+text = "Accept"
 
 [node name="HSliderAcceptLine" type="HSlider" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=352264488]
 custom_minimum_size = Vector2(60, 0)
@@ -220,20 +220,17 @@ max_value = 1.0
 step = 0.02
 value = 0.30000000000000004
 
-[node name="Label" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=971858308]
+[node name="CheckButtonFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=697860902]
 layout_mode = 2
-text = "IgnoreFreeNote"
-
-[node name="CheckButtonIgnoreFreeNote" type="CheckButton" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=697860902]
-layout_mode = 2
+text = "Free Note"
 
 [node name="Label4" type="Label" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1542859965]
 layout_mode = 2
-text = "AutoFollow"
+text = "Auto Follow"
 
 [node name="OptionButtonAutoFollow" type="OptionButton" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1519576258]
 layout_mode = 2
-selected = 0
+selected = 2
 item_count = 4
 popup/item_0/text = "None"
 popup/item_0/id = 0
