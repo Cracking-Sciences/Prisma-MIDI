@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dgmd5ebmcorn8"]
+
+[ext_resource type="Script" uid="uid://du4i318sydly2" path="res://Scenes/TrackRow.gd" id="1_52a2x"]
+
+[node name="TrackRow" type="HBoxContainer" unique_id=1318839649]
+script = ExtResource("1_52a2x")
+
+[node name="LabelTrackName" type="Label" parent="." unique_id=102504631]
+clip_contents = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Track Name"
+
+[node name="CheckBoxEnabled" type="CheckBox" parent="." unique_id=1964635830]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+icon_alignment = 1
+
+[node name="CheckBoxPrisma" type="CheckBox" parent="." unique_id=1489325295]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="CheckBoxToOutput" type="CheckBox" parent="." unique_id=1519185824]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2

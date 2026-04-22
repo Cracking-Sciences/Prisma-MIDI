@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cm35b8mc071c4" path="res://Scenes/midi_options.gd" id="1_q467k"]
 [ext_resource type="Shader" uid="uid://r57k7kwj485l" path="res://Shaders/Blur.gdshader" id="2_5ub51"]
-[ext_resource type="Script" uid="uid://bmqlj1p0yo1lq" path="res://Scenes/CheckBoxTemplate.gd" id="2_423k2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_liijr"]
 shader = ExtResource("2_5ub51")
@@ -79,16 +78,16 @@ text = "Load MIDI File"
 layout_mode = 2
 text = "[Invalid] (drag file here)"
 
-[node name="ButtonSelectTracks" type="Button" parent="VBoxContainer/HBoxContainerScore" unique_id=50308972]
+[node name="ButtonTracks" type="Button" parent="VBoxContainer/HBoxContainerScore" unique_id=1451937883]
 layout_mode = 2
-text = "Select Tracks ↓"
+text = "Track Settings"
 
-[node name="PopupMenuSelectTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks" unique_id=874952211]
+[node name="PopupPanelTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonTracks" unique_id=1089626821]
 oversampling_override = 1.0
-size = Vector2i(400, 400)
+size = Vector2i(450, 300)
 visible = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks" unique_id=1921342165]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks" unique_id=1883288424]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -99,40 +98,34 @@ offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer" unique_id=1632482575]
+[node name="TracksContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer" unique_id=1702774420]
 layout_mode = 2
 
-[node name="CheckBoxTemplate" type="CheckBox" parent="VBoxContainer/HBoxContainerScore/ButtonSelectTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer" unique_id=1437159977]
-visible = false
-layout_mode = 2
-script = ExtResource("2_423k2")
-
-[node name="ButtonPrismaTracks" type="Button" parent="VBoxContainer/HBoxContainerScore" unique_id=418447619]
-layout_mode = 2
-text = "Manual Tracks ↓"
-
-[node name="PopupMenuSelectTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonPrismaTracks" unique_id=1239330296]
-oversampling_override = 1.0
-size = Vector2i(400, 400)
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonPrismaTracks/PopupMenuSelectTracks" unique_id=682461718]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 396.0
-offset_bottom = 396.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainerScore/ButtonPrismaTracks/PopupMenuSelectTracks/ScrollContainer" unique_id=1574202788]
+[node name="HeaderRow" type="HBoxContainer" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer" unique_id=1913652928]
 layout_mode = 2
 
-[node name="CheckBoxTemplate" type="CheckBox" parent="VBoxContainer/HBoxContainerScore/ButtonPrismaTracks/PopupMenuSelectTracks/ScrollContainer/VBoxContainer" unique_id=47056995]
-visible = false
+[node name="LabelColTrackName" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=531854987]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-script = ExtResource("2_423k2")
+text = "Track Name"
+
+[node name="LabelColEnable" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=236603254]
+clip_contents = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Enable"
+
+[node name="LabelColPrisma" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=1266233178]
+clip_contents = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Manual"
+
+[node name="LabelColOutput" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=454093143]
+clip_contents = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Output"
 
 [node name="ButtonGenerateMap" type="Button" parent="VBoxContainer/HBoxContainerScore" unique_id=665433492]
 layout_mode = 2
@@ -158,7 +151,6 @@ show_hidden_files = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonSendSomeNotes" to="." method="on_send_some_notes"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerDevice/ButtonMuteAll" to="." method="on_key_off_all"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonOpenScore" to="." method="on_open_file_dialog"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonSelectTracks" to="." method="on_button_select_tracks_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonPrismaTracks" to="." method="on_button_prisma_tracks_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonTracks" to="." method="on_button_tracks_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainerScore/ButtonGenerateMap" to="." method="on_button_generate_map"]
 [connection signal="file_selected" from="FileDialog" to="." method="on_file_dialog_selected"]

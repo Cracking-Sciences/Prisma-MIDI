@@ -53,8 +53,8 @@ func on_midi_in_message(_deltatime, message):
 func on_generate_map():
 	if midi_options.smf_result == null:
 		return
-	piano_roll.generate_map(midi_options.smf_result.data, midi_options.get_selected_tracks_number())
-	piano_roll.get_prisma_tracks(midi_options.get_prisma_tracks_number())
+	piano_roll.generate_map(midi_options.smf_result.data, midi_options.get_new_enabled_tracks())
+	piano_roll.get_prisma_tracks(midi_options.get_new_prisma_tracks())
 
 var keyboard_position_map = {
 	KEY_A: 1/11.0,
