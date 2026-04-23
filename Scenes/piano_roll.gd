@@ -261,21 +261,22 @@ func note_on_off_note_child(is_on, note_child):
 	# TODO: precice trigger time (likely a play buffer)
 	# var latency_ratio = max(fall_speed * last_delta - (note_child.falling_ratio - 1), 0)
 	# var latency_time = latency_ratio / fall_speed
-	if not note_child.send_to_output:
-		return
+	var should_output = note_child.send_to_output
 	if is_on:
 		var key = piano.get_key(note_child.note)
 		if key == null and parent != null:
-			parent.note_on_off(true, note_child.note, note_child.velocity)
+			if should_output:
+				parent.note_on_off(true, note_child.note, note_child.velocity)
 		else:
-			key.activate(note_child.velocity, note_child.modulate)
+			key.activate(note_child.velocity, note_child.modulate, should_output)
 		return
 	else:
 		var key = piano.get_key(note_child.note)
 		if key == null and parent != null:
-			parent.note_on_off(false, note_child.note, 100)
+			if should_output:
+				parent.note_on_off(false, note_child.note, 100)
 		else:
-			key.deactivate(100)
+			key.deactivate(100, should_output)
 		return
 
 
@@ -583,7 +584,7 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true,
 			var actual_velocity = velocity
 			if not manual_velocity:
 				actual_velocity = chosen_note_child.velocity
-			keyless_note_on_off(key, is_on, chosen_note_child.note, actual_velocity, chosen_note_child.modulate, channel)
+			keyless_note_on_off(key, is_on, chosen_note_child.note, actual_velocity, chosen_note_child.modulate, channel, chosen_note_child.send_to_output)
 			chosen_note_child.set_triggered()
 			prisma_links_add(note, chosen_note_child)
 
@@ -616,15 +617,15 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true,
 				var note_child = note_child_record.note_child
 				if note_child != null:
 					key = piano.get_key(note_child.note)
-					keyless_note_on_off(key, is_on, note_child.note, velocity, null, channel)
+					keyless_note_on_off(key, is_on, note_child.note, velocity, null, channel, note_child.send_to_output)
 					note_child.set_released()
 			prisma_links_remove(note)
 
-func keyless_note_on_off(key, is_on, note, velocity, color = null, channel = 0):
+func keyless_note_on_off(key, is_on, note, velocity, color = null, channel = 0, send_to_output = true):
 	if key != null:
 		if is_on:
-			key.activate(velocity, color)
+			key.activate(velocity, color, send_to_output)
 		else:
-			key.deactivate(velocity)
-	if get_parent() != null:
+			key.deactivate(velocity, send_to_output)
+	if get_parent() != null and send_to_output:
 		get_parent().note_on_off(is_on, note, velocity, channel)

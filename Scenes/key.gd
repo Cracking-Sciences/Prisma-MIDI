@@ -41,9 +41,9 @@ func mouse_deactivate():
 	deactivate(100)
 
 
-func activate(velocity, new_color = null):
+func activate(velocity, new_color = null, send_to_output = true):
 	is_activate = true
-	if piano != null:
+	if piano != null and send_to_output:
 		piano.note_on_off.emit(true, note, velocity)
 	if new_color == null:
 		new_color = active_color
@@ -54,11 +54,11 @@ func activate(velocity, new_color = null):
 	light_wide.color = new_color
 	light_wide.enabled = true
 
-func deactivate(velocity):
+func deactivate(velocity, send_to_output = true):
 	if is_activate:
 		is_activate = false
 		color = start_color
-		if piano != null:
+		if piano != null and send_to_output:
 			piano.note_on_off.emit(false, note, velocity)
 	light.enabled = false
 	light_wide.enabled = false
