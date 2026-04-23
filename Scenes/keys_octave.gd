@@ -17,6 +17,14 @@ func _ready():
 			new_key.color = Color(0.15,0.15,0.15)
 			new_key.start_color = new_key.color
 			new_key.default_z_index = 1
+			# Add light occluder so black keys block light
+			var occluder = LightOccluder2D.new()
+			occluder.occluder_light_mask = 1
+			var polygon = OccluderPolygon2D.new()
+			polygon.cull_mode = OccluderPolygon2D.CULL_CLOCKWISE
+			occluder.occluder = polygon
+			occluder.name = "BlackKeyOccluder"
+			new_key.add_child(occluder)
 		else:
 			new_key.color = Color(0.8,0.8,0.8)
 			new_key.start_color = new_key.color
@@ -41,6 +49,15 @@ func resize():
 			color_rect.size = Vector2(black_width, black_height)
 			color_rect.position = Vector2((i+0.5) * twelve_equal - black_width / 2, 0)
 			color_rect.move_to_front()
+			# Update occluder polygon to match black key shape
+			var occluder = color_rect.get_node_or_null("BlackKeyOccluder")
+			if occluder != null:
+				occluder.occluder.polygon = PackedVector2Array([
+					Vector2(0, 0),
+					Vector2(black_width, 0),
+					Vector2(black_width, black_height),
+					Vector2(0, black_height)
+				])
 
 		else:
 			color_rect.size = Vector2(white_width - white_gap, white_height)

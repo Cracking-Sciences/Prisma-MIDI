@@ -18,7 +18,6 @@ range_z_min = -2
 range_z_max = 3
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 0.77254903)
-shadow_item_cull_mask = 0
 texture = ExtResource("2_3s2t6")
 texture_scale = 0.4
 
