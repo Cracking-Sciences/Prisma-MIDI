@@ -14,6 +14,7 @@ var auto_play = true
 var stopped_prisma_note_count:int = 0
 var prisma_tracks = []
 var silent_tracks = []
+var strict_tracks = []
 
 @onready
 var piano_roll_container = $PianoRollContainer
@@ -191,6 +192,7 @@ func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
 	note_child.velocity = velocity
 	note_child.track_number = track_number
 	note_child.send_to_output = track_number not in silent_tracks
+	note_child.strict = track_number in strict_tracks
 	note_child.falling_speed = fall_speed
 	note_child.falling_ratio = latency_ratio # process-delta latency
 	note_child.length_ratio = 1000.0 # long enough
@@ -474,6 +476,9 @@ func get_prisma_tracks(_tracks):
 func get_silent_tracks(_tracks):
 	silent_tracks = _tracks
 
+func get_strict_tracks(_tracks):
+	strict_tracks = _tracks
+
 func play_stop(is_play):
 	if is_play and ready_to_play:
 		button_play.text = "Stop"
@@ -545,34 +550,57 @@ func prisma_links_reset():
 		prisma_links_remove(note)
 
 func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true, channel = 0):
-	# find a neareast prisma note
+	# find a nearest prisma note
 	if is_on:
-		var min_distance = 10000.0 # ratio
 		var chosen_note_child = null
-		var note_children_list = note_children_map.values()
 		var above_judge_line = true
-		for note_children in note_children_list:
-			for note_child in note_children:
+
+		# --- Pass 1: strict prisma notes (exact note match only) ---
+		if note in note_children_map:
+			for note_child in note_children_map[note]:
 				if note_child.track_number not in prisma_tracks:
+					continue
+				if not note_child.strict:
 					continue
 				if note_child.triggered:
 					continue
-				var weighted_distance
 				var vertical_dist_ratio = 1 - note_child.falling_ratio
-				if vertical_dist_ratio <= judge_line_ratio:
-					# beneath the judge line
-					var horizontal_dist_ratio = abs(piano.get_note_x(note, false) - note_child.position.x) / piano.size.x
-					# TODO Change the x-y ratio for easier hitting
-					weighted_distance = horizontal_dist_ratio + vertical_dist_ratio * 5
-					above_judge_line = false
-				elif vertical_dist_ratio <= accept_line_ratio:
-					# above the judge line, but under the accept line
-					weighted_distance = vertical_dist_ratio * 1000
-				else:
+				if vertical_dist_ratio > accept_line_ratio:
 					continue
-				if weighted_distance < min_distance:
-					min_distance = weighted_distance
+				# Pick the closest strict note vertically
+				if chosen_note_child == null or vertical_dist_ratio < (1 - chosen_note_child.falling_ratio):
 					chosen_note_child = note_child
+					above_judge_line = vertical_dist_ratio > judge_line_ratio
+
+		# --- Pass 2: normal (non-strict) prisma notes (nearest neighbor) ---
+		if chosen_note_child == null:
+			var min_distance = 10000.0
+			var note_children_list = note_children_map.values()
+			for note_children in note_children_list:
+				for note_child in note_children:
+					if note_child.track_number not in prisma_tracks:
+						continue
+					if note_child.strict:
+						continue  # strict notes handled in pass 1
+					if note_child.triggered:
+						continue
+					var weighted_distance
+					var vertical_dist_ratio = 1 - note_child.falling_ratio
+					if vertical_dist_ratio <= judge_line_ratio:
+						# beneath the judge line
+						var horizontal_dist_ratio = abs(piano.get_note_x(note, false) - note_child.position.x) / piano.size.x
+						# TODO Change the x-y ratio for easier hitting
+						weighted_distance = horizontal_dist_ratio + vertical_dist_ratio * 5
+						above_judge_line = false
+					elif vertical_dist_ratio <= accept_line_ratio:
+						# above the judge line, but under the accept line
+						weighted_distance = vertical_dist_ratio * 1000
+					else:
+						continue
+					if weighted_distance < min_distance:
+						min_distance = weighted_distance
+						chosen_note_child = note_child
+
 		if chosen_note_child == null:
 			# normal action:
 			if free_note_check_button.button_pressed:
@@ -599,7 +627,7 @@ func manual_note_on_off(is_on, note, velocity, from_key, manual_velocity = true,
 				# skip some time
 				var skipped_ratio = 1 - judge_line_slider.value - chosen_note_child.falling_ratio
 				# all notes skip down!
-				note_children_list = note_children_map.values()
+				var note_children_list = note_children_map.values()
 				for note_children in note_children_list:
 					for note_child in note_children:
 						note_child.falling_ratio += skipped_ratio

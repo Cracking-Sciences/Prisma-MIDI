@@ -4,6 +4,7 @@ var note = 60
 var velocity = 100
 var track_number = 0
 var send_to_output = true
+var strict = false
 
 var falling_speed = 1 # % area.y per second
 var falling_ratio = 0

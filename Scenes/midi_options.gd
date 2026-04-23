@@ -174,6 +174,7 @@ func update_track_panel(tracks: Array[SMF.MIDITrack]):
 		row.label_track_name.text = Utils.get_track_name(track)
 		row.is_enabled = true
 		row.is_prisma = false
+		row.is_strict = false
 		row.send_to_output = true
 
 
@@ -197,5 +198,13 @@ func get_new_silent_tracks() -> Array:
 	var result = []
 	for child in tracks_container.get_children():
 		if child is TrackRow and not child.send_to_output:
+			result.append(child.track_number)
+	return result
+
+
+func get_new_strict_tracks() -> Array:
+	var result = []
+	for child in tracks_container.get_children():
+		if child is TrackRow and child.is_strict:
 			result.append(child.track_number)
 	return result

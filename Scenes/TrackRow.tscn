@@ -20,6 +20,10 @@ icon_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
+[node name="CheckBoxStrict" type="CheckBox" parent="." unique_id=1920724218]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
 [node name="CheckBoxToOutput" type="CheckBox" parent="." unique_id=1519185824]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2

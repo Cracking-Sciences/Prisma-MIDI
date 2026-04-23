@@ -26,7 +26,7 @@ func _ready():
 			occluder.name = "BlackKeyOccluder"
 			new_key.add_child(occluder)
 		else:
-			new_key.color = Color(0.8,0.8,0.8)
+			new_key.color = Color(0.6,0.6,0.6)
 			new_key.start_color = new_key.color
 			new_key.default_z_index = 0
 		add_child(new_key)

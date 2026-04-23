@@ -123,6 +123,11 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "Manual"
 
+[node name="LabelColStrict" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=1012119718]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Strict"
+
 [node name="LabelColOutput" type="Label" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks/ScrollContainer/TracksContainer/HeaderRow" unique_id=454093143]
 clip_contents = true
 custom_minimum_size = Vector2(50, 0)
