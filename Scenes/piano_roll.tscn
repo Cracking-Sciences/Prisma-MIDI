@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://d14junkj2nf6e" path="res://Scenes/piano_roll.gd" id="1_7ujpr"]
 [ext_resource type="Script" uid="uid://nu4a3wt5bia7" path="res://Scenes/piano.gd" id="1_jqdrl"]
-[ext_resource type="Script" uid="uid://1i4cok5xc6re" path="res://Scenes/note.gd" id="2_2kehm"]
-[ext_resource type="Theme" uid="uid://r3750kpxv4u6" path="res://note_panel_theme.tres" id="2_kmldm"]
 
 [node name="PianoRoll" type="Control" unique_id=1942848616]
 layout_mode = 3
@@ -35,22 +33,6 @@ alignment = 2
 [node name="NoteArea" type="Control" parent="PianoRollContainer" unique_id=365570297]
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
-
-[node name="note" type="Panel" parent="PianoRollContainer/NoteArea" unique_id=589708920]
-z_index = -2
-layout_mode = 0
-offset_left = 1262.0
-offset_top = -99.0
-offset_right = 1282.0
-offset_bottom = 1.0
-localize_numeral_system = false
-theme = ExtResource("2_kmldm")
-script = ExtResource("2_2kehm")
-
-[node name="DiamondMarker" type="Polygon2D" parent="PianoRollContainer/NoteArea/note" unique_id=1389696909]
-visible = false
-color = Color(1, 0, 0, 1)
-offset = Vector2(0.5, 0)
 
 [node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2120442648]
 layout_mode = 0

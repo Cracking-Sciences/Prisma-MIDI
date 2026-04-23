@@ -21,11 +21,11 @@ var piano_roll_container = $PianoRollContainer
 @onready
 var note_area = $PianoRollContainer/NoteArea
 @onready
-var note_template = $PianoRollContainer/NoteArea/note
-@onready
 var piano = $PianoRollContainer/Piano
 
 var parent = null
+
+var note_scene = preload("res://Scenes/note.tscn")
 
 @onready
 var avoid_stacked_notes_check_button= $PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer/VBoxContainer/CheckButtonAvoidStack
@@ -186,14 +186,12 @@ func clear_fell_below_note_child(note_children, note_child):
 			note_child.queue_free()
 
 func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
-	var note_child = note_template.duplicate()
+	var note_child: Note = note_scene.instantiate()
 	note_child.parent = note_area
 	note_child.note = note
 	note_child.velocity = velocity
 	note_child.track_number = track_number
-	note_child.send_to_output = track_number not in silent_tracks
-	note_child.strict = track_number in strict_tracks
-	note_child.is_prisma = track_number in prisma_tracks
+	note_child.is_prisma = (track_number in prisma_tracks)
 	note_child.falling_speed = fall_speed
 	note_child.falling_ratio = latency_ratio # process-delta latency
 	note_child.length_ratio = 1000.0 # long enough

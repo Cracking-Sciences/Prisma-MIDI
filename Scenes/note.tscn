@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dly5p5odm5m1u"]
+
+[ext_resource type="Script" uid="uid://1i4cok5xc6re" path="res://Scenes/note.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://r3750kpxv4u6" path="res://note_panel_theme.tres" id="2_theme"]
+
+[node name="Note" type="Panel"]
+z_index = -2
+layout_mode = 0
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="DiamondMarker" type="Polygon2D" parent="."]
+visible = false
+color = Color(1, 0.3977014, 0.3292555, 1)
+offset = Vector2(0.5, 0)
+antialiased = true

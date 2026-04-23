@@ -5,30 +5,37 @@ extends ColorRect
 @export var start_color = color
 @export var piano: Piano = null
 @export var active_color = Color.ORANGE # default active color
-
 @export var default_z_index = 0
 
-@onready
-var light = $PointLight2D
-var light_wide: PointLight2D # secondary wide light for neighbor spillover
-# Called when the node enters the scene tree for the first time.
+var light_top: PointLight2D
+var light_bottom: PointLight2D
+
+
+func _make_light() -> PointLight2D:
+	var l = PointLight2D.new()
+	l.texture = load("res://assets/2d_lights_and_shadows_neutral_point_light.webp")
+	l.energy = 0.8
+	l.texture_scale = 1.5
+	l.enabled = false
+	l.range_z_min = -2
+	l.range_z_max = default_z_index
+	l.shadow_enabled = true
+	l.shadow_color = Color(0, 0, 0, 0.77254903)
+	l.shadow_filter = Light2D.SHADOW_FILTER_PCF13
+	l.shadow_filter_smooth = 3.0
+	return l
+
+
 func _ready():
 	z_index = default_z_index
-	light.range_z_max = z_index
-	light.enabled = false
-	# Soft shadow edges with gradient scatter
-	light.shadow_filter = Light2D.SHADOW_FILTER_PCF13
-	light.shadow_filter_smooth = 3.0
 
-	# Create secondary wide light (half intensity, wider spread)
-	light_wide = light.duplicate()
-	light_wide.energy = 0.5
-	light_wide.texture_scale = light.texture_scale * 2.0
-	light_wide.enabled = false
-	add_child(light_wide)
+	light_top = _make_light()
+	add_child(light_top)
 
-	# Focus the primary light tighter on the key itself
-	light.texture_scale *= 0.7
+	light_bottom = _make_light()
+	add_child(light_bottom)
+
+	_on_resized()
 
 
 var is_activate = false
@@ -49,10 +56,10 @@ func activate(velocity, new_color = null, send_to_output = true):
 		new_color = active_color
 	color = (new_color * (128 + velocity)) / 256
 	color.a = 1
-	light.color = new_color
-	light.enabled = true
-	light_wide.color = new_color
-	light_wide.enabled = true
+	light_top.color = new_color
+	light_top.enabled = true
+	light_bottom.color = new_color
+	light_bottom.enabled = true
 
 func deactivate(velocity, send_to_output = true):
 	if is_activate:
@@ -60,10 +67,11 @@ func deactivate(velocity, send_to_output = true):
 		color = start_color
 		if piano != null and send_to_output:
 			piano.note_on_off.emit(false, note, velocity)
-	light.enabled = false
-	light_wide.enabled = false
+	light_top.enabled = false
+	light_bottom.enabled = false
 
-# slide:
+
+# slide
 func _on_mouse_entered():
 	if piano != null and piano.get_mouse_pressed():
 		mouse_activate()
@@ -82,18 +90,22 @@ func _gui_input(input_event):
 			piano.set_mouse_pressed(false)
 		mouse_deactivate()
 
-# slide release 
+# slide release
 func _on_change_mouse_pressed():
 	if not piano.get_mouse_pressed():
 		mouse_deactivate()
 
-# on resize
+
+# on resize: top light at y=0, bottom light at y=size.y, both centered on x
 var light_base_size = 30 # px
 func _on_resized():
-	light.position.x = size.x / 2
-	light.scale.x = size.x / light_base_size
-	light.scale.y = size.y / light_base_size
-	if light_wide != null:
-		light_wide.position.x = size.x / 2
-		light_wide.scale.x = size.x / light_base_size
-		light_wide.scale.y = size.y / light_base_size
+	if light_top == null or light_bottom == null:
+		return
+	var scale_x = size.x / light_base_size
+	var scale_y = size.y / light_base_size
+
+	light_top.position = Vector2(size.x / 2, 0)
+	light_top.scale = Vector2(scale_x, scale_y)
+
+	light_bottom.position = Vector2(size.x / 2, size.y)
+	light_bottom.scale = Vector2(scale_x, scale_y)
