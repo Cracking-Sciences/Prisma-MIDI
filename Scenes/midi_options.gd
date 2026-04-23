@@ -191,3 +191,11 @@ func get_new_prisma_tracks() -> Array:
 		if child is TrackRow and child.is_prisma:
 			result.append(child.track_number)
 	return result
+
+
+func get_new_silent_tracks() -> Array:
+	var result = []
+	for child in tracks_container.get_children():
+		if child is TrackRow and not child.send_to_output:
+			result.append(child.track_number)
+	return result

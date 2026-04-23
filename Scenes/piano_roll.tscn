@@ -39,10 +39,11 @@ layout_mode = 2
 [node name="note" type="Panel" parent="PianoRollContainer/NoteArea" unique_id=589708920]
 z_index = -2
 layout_mode = 0
-offset_left = -115.0
-offset_top = 84.0
-offset_right = -95.0
-offset_bottom = 184.0
+offset_left = 1262.0
+offset_top = -99.0
+offset_right = 1282.0
+offset_bottom = 1.0
+localize_numeral_system = false
 theme = ExtResource("2_kmldm")
 script = ExtResource("2_2kehm")
 
@@ -243,21 +244,21 @@ popup/item_3/id = 3
 
 [node name="ButtonPopMore" type="Button" parent="PianoRollContainer/HBoxContainerWidgets" unique_id=1551306562]
 layout_mode = 2
-text = "More Settings"
+text = "More Settings 📃"
 
 [node name="PopupMenu" type="PopupPanel" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore" unique_id=1270037828]
 transparent_bg = false
 oversampling_override = 1.0
 title = "More Settings"
-position = Vector2i(0, 300)
-size = Vector2i(308, 400)
+size = Vector2i(220, 400)
 visible = true
+transparent = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu" unique_id=591659596]
 clip_contents = false
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 304.0
+offset_right = 216.0
 offset_bottom = 396.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PianoRollContainer/HBoxContainerWidgets/ButtonPopMore/PopupMenu/ScrollContainer" unique_id=1489586635]

@@ -45,7 +45,6 @@ func deactivate(velocity):
 		color = start_color
 		if piano != null:
 			piano.note_on_off.emit(false, note, velocity)
-	
 	light.enabled = false
 
 # slide:

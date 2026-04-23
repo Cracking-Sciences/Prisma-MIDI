@@ -13,6 +13,7 @@ var fall_speed = 1.0
 var auto_play = true
 var stopped_prisma_note_count:int = 0
 var prisma_tracks = []
+var silent_tracks = []
 
 @onready
 var piano_roll_container = $PianoRollContainer
@@ -189,6 +190,7 @@ func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
 	note_child.note = note
 	note_child.velocity = velocity
 	note_child.track_number = track_number
+	note_child.send_to_output = track_number not in silent_tracks
 	note_child.falling_speed = fall_speed
 	note_child.falling_ratio = latency_ratio # process-delta latency
 	note_child.length_ratio = 1000.0 # long enough
@@ -259,6 +261,8 @@ func note_on_off_note_child(is_on, note_child):
 	# TODO: precice trigger time (likely a play buffer)
 	# var latency_ratio = max(fall_speed * last_delta - (note_child.falling_ratio - 1), 0)
 	# var latency_time = latency_ratio / fall_speed
+	if not note_child.send_to_output:
+		return
 	if is_on:
 		var key = piano.get_key(note_child.note)
 		if key == null and parent != null:
@@ -364,7 +368,12 @@ func change_piano_octaves(num):
 
 func pop_more_settings():
 	popup_menu_more_settings.popup()
-	popup_menu_more_settings.position = more_settings_button.position
+	var btn_global_pos = more_settings_button.get_screen_position()
+	var popup_size = popup_menu_more_settings.size
+	popup_menu_more_settings.position = Vector2i(
+		int(btn_global_pos.x),
+		int(btn_global_pos.y) - popup_size.y
+	)
 
 func change_piano_black_width(ratio):
 	piano.black_width_ratio = ratio
@@ -401,13 +410,14 @@ func change_accept_line(ratio):
 
 func change_auto_follow_line(ratio, velocity):
 	auto_follow_line_ratio = ratio
-	auto_follow_line_velocity = velocity
+	var average_weight = 0.6
+	auto_follow_line_velocity = auto_follow_line_velocity* average_weight + velocity * (1-average_weight)
 	note_area.get_node("AutoFollowLine").size.x = note_area.custom_minimum_size.x
 	note_area.get_node("AutoFollowLine").size.y = 1 + get_viewport_rect().size.y / 500
 	note_area.get_node("AutoFollowLine").position.y = note_area.custom_minimum_size.y * (1 - auto_follow_line_ratio)
-	note_area.get_node("AutoFollowLine").color.r = velocity / 128.0
-	note_area.get_node("AutoFollowLine").color.g = velocity / 128.0
-	note_area.get_node("AutoFollowLine").color.b = velocity / 128.0
+	note_area.get_node("AutoFollowLine").color.r = auto_follow_line_velocity / 128.0
+	note_area.get_node("AutoFollowLine").color.g = auto_follow_line_velocity / 128.0
+	note_area.get_node("AutoFollowLine").color.b = auto_follow_line_velocity / 128.0
 
 func change_auto_follow_option_button(index):
 	if index == 0:
@@ -459,6 +469,9 @@ func generate_map(smf_data:SMF.SMFData, selected_tracks):
 
 func get_prisma_tracks(_tracks):
 	prisma_tracks = _tracks
+
+func get_silent_tracks(_tracks):
+	silent_tracks = _tracks
 
 func play_stop(is_play):
 	if is_play and ready_to_play:

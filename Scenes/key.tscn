@@ -11,12 +11,16 @@ color = Color(0.466181, 0.466181, 0.466181, 1)
 script = ExtResource("1_o6whw")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=959684893]
-position = Vector2(2, 0)
-energy = 1.02
+position = Vector2(1.999999, 0)
+scale = Vector2(0.33203125, 1)
+color = Color(0.8033249, 0.8033249, 0.8033247, 1)
 range_z_min = -2
 range_z_max = 3
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.77254903)
 shadow_item_cull_mask = 0
 texture = ExtResource("2_3s2t6")
+texture_scale = 0.4
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

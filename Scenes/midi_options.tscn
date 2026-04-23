@@ -80,12 +80,14 @@ text = "[Invalid] (drag file here)"
 
 [node name="ButtonTracks" type="Button" parent="VBoxContainer/HBoxContainerScore" unique_id=1451937883]
 layout_mode = 2
-text = "Track Settings"
+text = "Track Settings 📃"
 
 [node name="PopupPanelTracks" type="PopupPanel" parent="VBoxContainer/HBoxContainerScore/ButtonTracks" unique_id=1089626821]
+transparent_bg = false
 oversampling_override = 1.0
 size = Vector2i(450, 300)
 visible = true
+transparent = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainerScore/ButtonTracks/PopupPanelTracks" unique_id=1883288424]
 anchors_preset = 15
