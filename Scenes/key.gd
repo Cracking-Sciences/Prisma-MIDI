@@ -28,10 +28,10 @@ func mouse_deactivate():
 	deactivate(100)
 
 
-func activate(velocity, new_color = null):
+func activate(velocity, new_color = null, is_auto = false):
 	is_activate = true
 	if piano != null:
-		piano.note_on_off.emit(true, note, velocity)
+		piano.note_on_off.emit(true, note, velocity, is_auto)
 	if new_color == null:
 		new_color = active_color
 	color = (new_color * (128 + velocity)) / 256
@@ -39,12 +39,12 @@ func activate(velocity, new_color = null):
 	light.color = new_color
 	light.enabled = true
 
-func deactivate(velocity):
+func deactivate(velocity, is_auto = false):
 	if is_activate:
 		is_activate = false
 		color = start_color
 		if piano != null:
-			piano.note_on_off.emit(false, note, velocity)
+			piano.note_on_off.emit(false, note, velocity, is_auto)
 	
 	light.enabled = false
 

@@ -68,6 +68,10 @@ text = "Test"
 layout_mode = 2
 text = "Panic"
 
+[node name="ButtonSendAutoOnly" type="CheckButton" parent="VBoxContainer/HBoxContainerDevice" unique_id=1707749531]
+layout_mode = 2
+text = "Send Auto Note Only"
+
 [node name="HBoxContainerScore" type="HBoxContainer" parent="VBoxContainer" unique_id=591072793]
 layout_mode = 2
 

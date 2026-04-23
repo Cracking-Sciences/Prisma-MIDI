@@ -262,16 +262,20 @@ func note_on_off_note_child(is_on, note_child):
 	if is_on:
 		var key = piano.get_key(note_child.note)
 		if key == null and parent != null:
-			parent.note_on_off(true, note_child.note, note_child.velocity)
+			# is_auto = true: this note comes from auto-play (non-prisma track)
+			parent.note_on_off(true, note_child.note, note_child.velocity, 0, true)
 		else:
-			key.activate(note_child.velocity, note_child.modulate)
+			# is_auto = true so the piano signal carries is_auto=true to main
+			key.activate(note_child.velocity, note_child.modulate, true)
 		return
 	else:
 		var key = piano.get_key(note_child.note)
 		if key == null and parent != null:
-			parent.note_on_off(false, note_child.note, 100)
+			# is_auto = true: this note release also comes from auto-play
+			parent.note_on_off(false, note_child.note, 100, 0, true)
 		else:
-			key.deactivate(100)
+			# is_auto = true so the piano signal carries is_auto=true to main
+			key.deactivate(100, true)
 		return
 
 

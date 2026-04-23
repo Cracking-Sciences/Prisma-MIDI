@@ -78,7 +78,7 @@ func _notification(what):
 	if what == NOTIFICATION_RESIZED:
 		resize_keys()
 
-signal note_on_off(is_on, note, velocity)
+signal note_on_off(is_on, note, velocity, is_auto)
 
 # for mouse clicks and slides on keys
 var is_mouse_pressed = false

@@ -44,6 +44,12 @@ var prisma_tracks_container = $VBoxContainer/HBoxContainerScore/ButtonPrismaTrac
 
 @onready
 var button_generate_map = $VBoxContainer/HBoxContainerScore/ButtonGenerateMap
+@onready
+var button_send_auto_only = $VBoxContainer/HBoxContainerDevice/ButtonSendAutoOnly
+
+var send_auto_only: bool:
+	get:
+		return button_send_auto_only != null and button_send_auto_only.button_pressed
 
 func _ready():
 	refresh()

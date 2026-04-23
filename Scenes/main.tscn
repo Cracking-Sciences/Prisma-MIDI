@@ -1206,3 +1206,4 @@ offset_top = -801.0
 grow_vertical = 0
 
 [node name="MidiOptions" parent="." unique_id=1721932615 instance=ExtResource("1_x8nld")]
+layout_mode = 1

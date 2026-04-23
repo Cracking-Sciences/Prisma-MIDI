@@ -9,12 +9,22 @@ var piano_roll = $PianoRoll
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	piano.note_on_off.connect(self.note_on_off)
+	# piano.note_on_off carries (is_on, note, velocity, is_auto)
+	piano.note_on_off.connect(self.on_piano_note_on_off)
 	midi_options.get_midi_in_message.connect(self.on_midi_in_message)
 	midi_options.generate_map.connect(self.on_generate_map)
 	piano_roll.parent = self
 
-func note_on_off(is_on, note, velocity, channel = 0):
+# Dedicated handler for signal from piano keys.
+# is_auto=true means triggered by auto-play; is_auto=false means mouse click.
+func on_piano_note_on_off(is_on, note, velocity, is_auto = false):
+	note_on_off(is_on, note, velocity, 0, is_auto)
+
+func note_on_off(is_on, note, velocity, channel = 0, is_auto = false):
+	# When "Send Auto Note Only" is active, only auto-played (non-prisma-track)
+	# notes are forwarded to MIDI out; all other sources are silenced.
+	if midi_options.send_auto_only and not is_auto:
+		return
 	var status = (0x90 if is_on else 0x80) | (channel & 0x0F)
 	midi_options.send_midi_message([status, note, velocity], midi_options.midi_out)
 
@@ -25,6 +35,10 @@ func _notification(what):
 
 func on_midi_in_message(_deltatime, message):
 	if len(message) == 0:
+		return
+	# When "Send Auto Note Only" is active, all MIDI-in input (including mapped
+	# results) is silently discarded – nothing is forwarded to MIDI out.
+	if midi_options.send_auto_only:
 		return
 		
 	var status = message[0]
@@ -71,6 +85,9 @@ var keyboard_position_map = {
 func _input(event):
 	# keyboard input. unrecommended way as it doesn't express velocity emotion.
 	# but I added this feature anyway... make it more like a game.
+	# When "Send Auto Note Only" is active, keyboard-triggered notes are silenced.
+	if midi_options.send_auto_only:
+		return
 	if event is InputEventKey and not event.echo:
 		if event.keycode in keyboard_position_map.keys():
 			# linear map
