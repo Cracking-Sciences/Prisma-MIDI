@@ -193,6 +193,7 @@ func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
 	note_child.track_number = track_number
 	note_child.send_to_output = track_number not in silent_tracks
 	note_child.strict = track_number in strict_tracks
+	note_child.is_prisma = track_number in prisma_tracks
 	note_child.falling_speed = fall_speed
 	note_child.falling_ratio = latency_ratio # process-delta latency
 	note_child.length_ratio = 1000.0 # long enough
@@ -220,6 +221,7 @@ func note_reposition_x(_note_children, note_child):
 		return
 	note_child.position.x = piano.get_note_x(note_child.note, alter_notes_button.button_pressed)
 	note_child.size.x = piano.get_note_width(note_child.note, alter_notes_button.button_pressed)
+	note_child.reshape_diamond()
 
 var note_is_falling_all_last_action = false
 func note_is_falling_all(is_falling = false):

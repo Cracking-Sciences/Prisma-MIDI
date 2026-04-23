@@ -47,6 +47,11 @@ localize_numeral_system = false
 theme = ExtResource("2_kmldm")
 script = ExtResource("2_2kehm")
 
+[node name="DiamondMarker" type="Polygon2D" parent="PianoRollContainer/NoteArea/note" unique_id=1389696909]
+visible = false
+color = Color(1, 0, 0, 1)
+offset = Vector2(0.5, 0)
+
 [node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2120442648]
 layout_mode = 0
 offset_right = 100.0
