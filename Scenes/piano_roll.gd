@@ -76,6 +76,22 @@ var buttom_mask = $ColorRectMask
 @onready
 var piano_mask = $PianoRollContainer/Piano/ColorRectPianoMask
 
+
+@onready
+var accept_line = $PianoRollContainer/NoteArea/AcceptLine
+
+@onready
+var reference_line = $PianoRollContainer/NoteArea/ReferenceLine
+
+@onready
+var judge_line = $PianoRollContainer/NoteArea/JudgeLine
+
+@onready
+var judge_line_center = $PianoRollContainer/NoteArea/JudgeLineCenter
+
+@onready
+var auto_follow_line = $PianoRollContainer/NoteArea/AutoFollowLine
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	resize_timer = Timer.new()
@@ -135,6 +151,26 @@ func _process(delta):
 			_:
 				pass
 	last_delta = delta
+	
+	var note_children_list = note_children_map.values()
+	var max_overshoot = 0.0
+	for note_children in note_children_list:
+		for nc in note_children:
+			if not nc.triggered and nc.track_number in prisma_tracks and nc.falling_ratio > 1.0:
+				var os = nc.falling_ratio - 1.0
+				if os > max_overshoot:
+					max_overshoot = os
+
+	if max_overshoot > 0:
+		var overshoot_time = max_overshoot / fall_speed
+		events_and_status.position -= float(events_and_status.timebase) * overshoot_time * events_and_status.seconds_to_timebase * play_speed
+		for note_children in note_children_list:
+			for nc in note_children:
+				nc.falling_ratio -= max_overshoot
+				if abs(nc.falling_ratio - 1.0) < 0.0001:
+					nc.falling_ratio = 1.0
+				nc.reposition_y()
+
 	do_func_to_all_note_children([trigger_from_note_child, clear_fell_below_note_child])
 
 
@@ -396,19 +432,24 @@ func change_piano_middle_octave(value):
 
 func change_judge_line(ratio):
 	judge_line_ratio = ratio
-	note_area.get_node("JudgeLine").size.x = note_area.custom_minimum_size.x
-	note_area.get_node("JudgeLine").size.y = 1 + get_viewport_rect().size.y / 500
-	note_area.get_node("JudgeLine").position.y = note_area.custom_minimum_size.y * (1 - judge_line_ratio)
+	judge_line.size.x = note_area.custom_minimum_size.x
+	judge_line.size.y = 1 + get_viewport_rect().size.y / 500
+	judge_line.position.y = note_area.custom_minimum_size.y * (1 - judge_line_ratio)
 	if judge_line_ratio > accept_line_ratio:
 		accept_line_slider.value = judge_line_ratio
 	if auto_follow_line_ratio > judge_line_ratio:
 		change_auto_follow_line(judge_line_ratio, auto_follow_line_velocity)
+	
+	# judge_line_center in the middle
+	judge_line_center.size.x = note_area.custom_minimum_size.x
+	judge_line_center.size.y = 2 + get_viewport_rect().size.y / 250
+	judge_line_center.position.y = note_area.custom_minimum_size.y * (1 - judge_line_ratio / 2)
 
 func change_accept_line(ratio):
 	accept_line_ratio = ratio
-	note_area.get_node("AcceptLine").size.x = note_area.custom_minimum_size.x
-	note_area.get_node("AcceptLine").size.y = 1 + get_viewport_rect().size.y / 500
-	note_area.get_node("AcceptLine").position.y = note_area.custom_minimum_size.y * (1 - accept_line_ratio)
+	accept_line.size.x = note_area.custom_minimum_size.x
+	accept_line.size.y = 1 + get_viewport_rect().size.y / 500
+	accept_line.position.y = note_area.custom_minimum_size.y * (1 - accept_line_ratio)
 	if judge_line_ratio > accept_line_ratio:
 		judge_line_slider.value = accept_line_ratio
 
@@ -416,18 +457,18 @@ func change_auto_follow_line(ratio, velocity):
 	auto_follow_line_ratio = ratio
 	var average_weight = 0.6
 	auto_follow_line_velocity = auto_follow_line_velocity* average_weight + velocity * (1-average_weight)
-	note_area.get_node("AutoFollowLine").size.x = note_area.custom_minimum_size.x
-	note_area.get_node("AutoFollowLine").size.y = 1 + get_viewport_rect().size.y / 500
-	note_area.get_node("AutoFollowLine").position.y = note_area.custom_minimum_size.y * (1 - auto_follow_line_ratio)
-	note_area.get_node("AutoFollowLine").color.r = auto_follow_line_velocity / 128.0
-	note_area.get_node("AutoFollowLine").color.g = auto_follow_line_velocity / 128.0
-	note_area.get_node("AutoFollowLine").color.b = auto_follow_line_velocity / 128.0
+	auto_follow_line.size.x = note_area.custom_minimum_size.x
+	auto_follow_line.size.y = 1 + get_viewport_rect().size.y / 500
+	auto_follow_line.position.y = note_area.custom_minimum_size.y * (1 - auto_follow_line_ratio)
+	auto_follow_line.color.r = auto_follow_line_velocity / 128.0
+	auto_follow_line.color.g = auto_follow_line_velocity / 128.0
+	auto_follow_line.color.b = auto_follow_line_velocity / 128.0
 
 func change_auto_follow_option_button(index):
 	if index == 0:
-		note_area.get_node("AutoFollowLine").visible = false
+		auto_follow_line.visible = false
 	else:
-		note_area.get_node("AutoFollowLine").visible = true
+		auto_follow_line.visible = true
 		change_auto_follow_line(0.0, 100)
 
 func change_fall_speed(value):

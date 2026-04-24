@@ -34,12 +34,6 @@ alignment = 2
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 
-[node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2120442648]
-layout_mode = 0
-offset_right = 100.0
-offset_bottom = 10.0
-color = Color(1, 0.75, 0.5, 0.196078)
-
 [node name="AutoFollowLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=775947176]
 layout_mode = 0
 offset_top = 153.0
@@ -59,7 +53,20 @@ layout_mode = 0
 offset_left = -163.0
 offset_right = -152.0
 offset_bottom = 376.0
-color = Color(1, 1, 1, 0.0901961)
+color = Color(1, 1, 1, 0.03529412)
+
+[node name="JudgeLine" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=2120442648]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 10.0
+color = Color(1, 0.75, 0.5, 0.196078)
+
+[node name="JudgeLineCenter" type="ColorRect" parent="PianoRollContainer/NoteArea" unique_id=554528832]
+layout_mode = 0
+offset_top = 237.0
+offset_right = 103.0
+offset_bottom = 247.0
+color = Color(1, 1, 1, 0.39607844)
 
 [node name="Piano" type="Control" parent="PianoRollContainer" unique_id=1657616626]
 custom_minimum_size = Vector2(0, 200)
