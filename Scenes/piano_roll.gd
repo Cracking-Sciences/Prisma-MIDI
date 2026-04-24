@@ -25,6 +25,7 @@ var piano = $PianoRollContainer/Piano
 
 var parent = null
 
+@onready
 var note_scene = preload("res://Scenes/note.tscn")
 
 @onready

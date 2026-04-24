@@ -3,14 +3,36 @@
 [ext_resource type="Script" uid="uid://1i4cok5xc6re" path="res://Scenes/note.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://r3750kpxv4u6" path="res://note_panel_theme.tres" id="2_theme"]
 
-[node name="Note" type="Panel"]
+[sub_resource type="Gradient" id="Gradient_soft_light"]
+offsets = PackedFloat32Array(0, 0.15, 0.6, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.8, 1, 1, 1, 0.2, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_glow"]
+gradient = SubResource("Gradient_soft_light")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Note" type="Panel" unique_id=478742644]
 z_index = -2
-layout_mode = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="DiamondMarker" type="Polygon2D" parent="."]
-visible = false
-color = Color(1, 0.3977014, 0.3292555, 1)
+[node name="DiamondMarker" type="Polygon2D" parent="." unique_id=1219766305]
+color = Color(1, 0.24705882, 0.1882353, 1)
+offset = Vector2(0.5, 0)
+antialiased = true
+
+[node name="GlowLight" type="PointLight2D" parent="DiamondMarker" unique_id=430296989]
+color = Color(1, 0.24705882, 0.1882353, 1)
+energy = 5.0
+texture = SubResource("GradientTexture2D_glow")
+texture_scale = 0.3
+
+[node name="Halo" type="Polygon2D" parent="DiamondMarker" unique_id=1976031257]
+show_behind_parent = true
+color = Color(1, 0.24705882, 0.1882353, 0.73333335)
 offset = Vector2(0.5, 0)
 antialiased = true
