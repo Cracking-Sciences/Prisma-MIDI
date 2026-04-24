@@ -1,5 +1,7 @@
 # Prisma MIDI
 
+![Example](readme_assets/PrismaMIDIDemo.gif)
+
 
 ## What's it
 If you want to play a piano score but don't know how to or don't want to practice, Prisma MIDI is what you are looking for.
