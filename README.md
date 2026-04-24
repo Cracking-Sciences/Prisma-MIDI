@@ -1,39 +1,36 @@
-# Prisma MIDI (Prototype)
+# Prisma MIDI
 
 
 ## What's it
 If you want to play a piano score but don't know how to or don't want to practice, Prisma MIDI is what you are looking for.
 
 
-Prisma MIDI maps a wrong keystroke to the nearest right key position, given by a score midi file. With a midi input device and a midi audio source, player can focus on the speed and velocity expression, without paying attention to key-locating and fingering.
+**Prisma MIDI maps a wrong keystroke to the nearest right key**, given by a score midi file. With a midi input device and a midi audio source, player can focus on the speed and velocity expression, without paying attention to key-locating and fingering.
 
 ## Details
 ### MIDI Input
 Prisma MIDI get midi signals from a MIDI source.   
-If you have no such a device, `ASDFGHJKL;` on a computer keyboard can be used as input. Those keys are mapped linearly to the piano keyboard. However, you will lose velocity expression. It's highly recommended to get a MIDI controller! Many electronic keyboards are midi compatible too.
+If you have no such a device, `ASDFGHJKL;` on a computer keyboard can be used as input. Those keys are mapped linearly to the piano keyboard. However, you will lose velocity expression. It's highly recommended to get a MIDI controller! Many piano keyboards are midi compatible too.
 
 ### MIDI Output
 Prisma MIDI will send the final processed MIDI signals to an output. On windows, the default output is Microsoft GS Wavetable Synth, which is laggy and crappy, don't use it unless no other choice.
 
-### Select Tracks
-A midi file has one or several tracks, select the tracks you want to auto / manual play.
+### Track Settings
 
-### Manual-Prisma Tracks
-Select the tracks you want to play manually. Other tracks will autoplay. 
+A midi file has one or several tracks, select the tracks you want to:
 
-We call notes from a manual-prisma track "prisma notes".
-
-If an un-triggered prisma note reaches the end (top of the piano keys), the whole score's progress will pause. 
-
-You can speed down the playing by utilizing the pause feature.
+- Enable: the notes on that track will show
+- Manual: the notes on that track will be played by you. These notes are called **prisma** notes. A small red mark is shown at the head (bottom) of these notes.
+- Strict: the played notes have no keymapping, you have to play the exact same key
+- Output: the triggered note will send signals to output
 
 
-### TolerateLine
+### Tolerate Line
 A keystroke can trigger the nearest prisma note that falls below the tolerate line. Horizontal and vertical distances are both considered. The triggered note will extends its buttom to the end.
 
 You can play strums for chords under the tolerate line.
 
-### AcceptLine
+### Accept Line
 
 If there is no prisma note that falls below the tolerate line, but some fall below the accept line, the lowest(vertically) prisma note can be triggered by a keystroke. The whole score's progress will fast-forward until the prisma note reaches the tolerate line, and the note will be triggered the same way as for tolerate line part.
 
@@ -43,14 +40,14 @@ Accept line is always above the tolerate line.
 
 
 
-### Ignore Free Note
-Whether you can trigger a key without a valid prisma note. Enable it to prevent hitting extra wrong keys.
+### Free Note
+Whether you can trigger a key without a valid prisma note. Disable it to prevent hitting extra wrong keys.
 
 ### Auto Follow
 
 For notes from a autoplay track, the defaut setting is letting them reach the end and trigger them with the velocity in the midi file.
 
-If velocity auto follow is enabled, the velocity to use will be the same as the last triggered prisma note.
+If velocity auto follow is enabled, the velocity to use will be the same as the latest triggered prisma notes (fading average).
 
 If timing auto follow is enabled, the trigger position will be the same as the last triggered prisma note (above the end and below the tolerate line).
 
