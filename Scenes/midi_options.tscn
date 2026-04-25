@@ -67,6 +67,10 @@ text = "Test"
 layout_mode = 2
 text = "Panic"
 
+[node name="SwitchSteinwayHack" type="CheckButton" parent="VBoxContainer/HBoxContainerDevice" unique_id=2056196880]
+layout_mode = 2
+text = "Loopback Safe"
+
 [node name="HBoxContainerScore" type="HBoxContainer" parent="VBoxContainer" unique_id=591072793]
 layout_mode = 2
 

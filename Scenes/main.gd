@@ -39,6 +39,17 @@ func on_midi_in_message(_deltatime, message):
 		var note = message[1] if len(message) > 1 else 0
 		var vel = message[2] if len(message) > 2 else 0
 		
+		if midi_options.switch_steinway_hack.button_pressed:
+			var current_time = Time.get_ticks_msec()
+			var match_found = false
+			for item in midi_options.recent_midi_out_notes:
+				if current_time - item.time <= 200 and item.note == note:
+					match_found = true
+					break
+			if match_found:
+				return
+		
+		
 		var key = piano.get_key(note)
 		if key == null:
 			# trigger without the key

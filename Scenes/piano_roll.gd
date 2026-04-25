@@ -229,6 +229,7 @@ func add_note_child(note, velocity, track_number = 0, latency_ratio = 0.0):
 	note_child.velocity = velocity
 	note_child.track_number = track_number
 	note_child.is_prisma = (track_number in prisma_tracks)
+	note_child.strict = (track_number in strict_tracks)
 	note_child.falling_speed = fall_speed
 	note_child.falling_ratio = latency_ratio # process-delta latency
 	note_child.length_ratio = 1000.0 # long enough

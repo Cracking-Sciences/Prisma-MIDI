@@ -6,6 +6,7 @@ var selected_midi_in_name = ""
 var time = 0.0
 var message_out: PackedByteArray
 var message_in: PackedByteArray
+var recent_midi_out_notes: Array = []
 var smf_result: SMF.SMFParseResult = null
 
 var disabled_midi_name = "*Disabled"
@@ -13,6 +14,7 @@ var disabled_midi_name = "*Disabled"
 @onready var midi_in = $MidiIn
 @onready var select_midi_out = $VBoxContainer/HBoxContainerDevice/SelectMidiOut
 @onready var select_midi_in = $VBoxContainer/HBoxContainerDevice/SelectMidiIn
+@onready var switch_steinway_hack = $VBoxContainer/HBoxContainerDevice/SwitchSteinwayHack
 @onready var file_dialog = $FileDialog
 @onready var file_name = $VBoxContainer/HBoxContainerScore/TextFileName
 @onready var button_generate_map = $VBoxContainer/HBoxContainerScore/ButtonGenerateMap
@@ -95,6 +97,18 @@ func send_midi_message(data: Array, target: MidiOut = null):
 	for item in data:
 		message_out.push_back(item)
 	midi_out.send_message(message_out)
+	
+	if len(data) >= 2 and switch_steinway_hack.button_pressed:
+		var status_type = data[0] & 0xF0
+		if status_type == 0x90 or status_type == 0x80:
+			var note = data[1]
+			var current_time = Time.get_ticks_msec()
+			var new_queue = []
+			for item in recent_midi_out_notes:
+				if current_time - item.time <= 200:
+					new_queue.append(item)
+			new_queue.append({"time": current_time, "note": note})
+			recent_midi_out_notes = new_queue
 
 
 # demo
